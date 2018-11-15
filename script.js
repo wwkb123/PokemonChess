@@ -1,6 +1,8 @@
 function setup() { //initialize everything
   fillMatrix();
   fillFunctionButtons();
+  setButtonImage(4,5,"bulbasaur");
+  setButtonImage(4,2,"squirtle_flipped");
 }
 
 function fillMatrix() {
@@ -60,4 +62,10 @@ function createRow(className) {
     rowDiv.className = "row " + className;
   }
   return rowDiv;
+}
+
+function setButtonImage(i, j, image) {
+  var button = document.getElementById("img_" + i + "_" + j);
+  button.setAttribute("src", "images/" + image + ".jpg");
+  button.setAttribute("alt", image);
 }
