@@ -3,6 +3,7 @@ function setup() { //initialize everything
   fillFunctionButtons();
   setButtonImage(4,5,"bulbasaur");
   setButtonImage(4,2,"squirtle_flipped");
+
 }
 
 function fillMatrix() {
@@ -37,7 +38,7 @@ function createDefaultButton() {
   var img = document.createElement("img");
   img.id = "img_" + i + "_" + j;
   img.setAttribute("src", "images/grid.jpg");
-  img.setAttribute("alt", "white");
+  img.setAttribute("alt", "grid");
   img.setAttribute("width", "75");
   img.setAttribute("height", "75");
 
@@ -68,4 +69,26 @@ function setButtonImage(i, j, image) {
   var button = document.getElementById("img_" + i + "_" + j);
   button.setAttribute("src", "images/" + image + ".jpg");
   button.setAttribute("alt", image);
+}
+
+function getButtonImage(i, j) {
+  var img = document.getElementById("img_" + i + "_" + j);
+  return img.getAttribute("alt");
+}
+
+
+//to move a character
+//swap(oldImage, newImage)
+function swapButton(i1, j1, i2, j2){
+  
+  var oldImage = getButtonImage(i1,j1);
+  var newImage = getButtonImage(i2,j2);
+
+  var button1 = document.getElementById("img_" + i1 + "_" + j1);
+  var button2 = document.getElementById("img_" + i2 + "_" + j2);
+
+  button1.setAttribute("src", "images/" + newImage + ".jpg");
+  button2.setAttribute("src", "images/" + oldImage + ".jpg");
+
+
 }
