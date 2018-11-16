@@ -1,6 +1,7 @@
 //i is y, j is x
 
 var isMonsterClicked = false;
+var monster1Name = "bulbasaur"
 var monster1Pos = []; // i, j pair
 var monster2Pos = [];
 
@@ -127,12 +128,16 @@ function swapButton(i1, j1, i2, j2){
   button1.setAttribute("src", "images/" + newImage + ".jpg");
   button2.setAttribute("src", "images/" + oldImage + ".jpg");
 
+  button1.setAttribute("alt", newImage);
+  button2.setAttribute("alt", oldImage);
+
 
 }
 
 function buttonClicked(i, j) {
-  var imageName = getButtonImage(i, j);
 
+  var imageName = getButtonImage(i, j);
+  console.log(i + " " + j + " " + imageName);
   if(imageName != "grid"){
     //monsterPos[0] == i
     //monsterPos[1] == j
@@ -140,8 +145,14 @@ function buttonClicked(i, j) {
   }
   else if(imageName == "grid" && isMonsterClicked){
     //movement
-    if(inRange(i, j, imageName)){  //if in valid range
 
+    if(inRange(i, j, monster1Name)){  //if in valid range
+      swapButton(monster1Pos[0],monster1Pos[1],i,j);
+      monster1Pos[0] = i;
+      monster1Pos[1] = j;
+      var placeholder = document.getElementById("button_"+ i +"_"+ j);
+      placeholder.pseudoStyle("");
+      isMonsterClicked = false;
     }
   }
 }
@@ -211,6 +222,8 @@ function displayRangeHelper(btn, className){
 }
 
 function inRange(curr_i, curr_j, monsterName){
+  //monsterPos[0] == i
+  //monsterPos[1] == j
   switch(monsterName){
 
     case "pikachu":
@@ -223,6 +236,7 @@ function inRange(curr_i, curr_j, monsterName){
 
     case "bulbasaur":
     case "bulbasaur_flipped":
+      return (Math.abs(curr_i - monster1Pos[0]) <= 1) && (Math.abs(curr_j - monster1Pos[1]) <= 1);
       break;
 
     case "charmander":
