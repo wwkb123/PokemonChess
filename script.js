@@ -302,7 +302,7 @@ function inRange(curr_i, curr_j, monsterName){
 
     case "bulbasaur":
     case "bulbasaur_flipped":
-      return (Math.abs(curr_i - currTurn.i) <= 1) && (Math.abs(curr_j - currTurn.j) <= 1);
+      return (Math.abs(curr_i - currTurn.i) <= 1) && (Math.abs(curr_j - currTurn.j) <= 1) && (curr_i == currTurn.i || curr_j == currTurn.j);
       break;
 
     case "charmander":
