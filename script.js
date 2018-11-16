@@ -1,8 +1,36 @@
+//i is y, j is x
+
+
+var character1 = {name: "bulbasaur", isClick: false};
+
+
+
+HTMLElement.prototype.pseudoStyle = function(content){
+  var _this = this;
+  var _sheetId = "pseudoStyles";
+  var _head = document.head || document.getElementsByTagName('head')[0];
+  var _sheet = document.getElementById(_sheetId) || document.createElement('style');
+  _sheet.id = _sheetId;
+  if(content != ""){
+    _sheet.innerHTML += content;
+  }else{
+    _sheet.innerHTML = content;
+  }
+ 
+  _head.appendChild(_sheet);
+  return this;
+};
+
+
 function setup() { //initialize everything
   fillMatrix();
   fillFunctionButtons();
+
   setButtonImage(4,5,"bulbasaur");
   setButtonImage(4,2,"squirtle_flipped");
+
+
+
 
 }
 
@@ -31,8 +59,11 @@ function fillFunctionButtons() {
 
 function createDefaultButton() {
   var button = document.createElement("div");
-  button.className = "thumbnail";
+  button.className = "button_" + i + "_" + j;
+  button.id = "button_" + i + "_" + j;
   button.setAttribute("onclick", "buttonClicked("+i+","+j+")");
+  button.setAttribute("style","position: relative");
+  
 
   //the image part
   var img = document.createElement("img");
@@ -51,6 +82,9 @@ function createDefaultButton() {
   button.appendChild(text);
   return button;
 }
+
+
+
 
 
 // helper functions below
@@ -92,3 +126,40 @@ function swapButton(i1, j1, i2, j2){
 
 
 }
+
+function buttonClicked(i, j) {
+  if(getButtonImage(i, j) != "grid"){
+    displayRange(i,j);
+  }
+}
+
+function displayRange(i, j){
+
+  if(!character1.isClick){
+
+    var left = document.getElementById("button_"+ i +"_"+ (j-1));
+    var right = document.getElementById("button_"+ i +"_"+ (j+1));
+    var top = document.getElementById("button_"+ (i-1) +"_"+ j);
+    var bottom = document.getElementById("button_"+ (i+1) +"_"+ j);
+
+    displayRangeHelper(left, left.getAttribute('id'));
+    displayRangeHelper(right, right.getAttribute('id'));
+    displayRangeHelper(top, top.getAttribute('id'));
+    displayRangeHelper(bottom, bottom.getAttribute('id'));
+
+    character1['isClick'] = true;
+  }else{
+    var placeholder = document.getElementById("button_"+ i +"_"+ j);
+    placeholder.pseudoStyle("");
+    character1['isClick'] = false;
+
+  }
+
+}
+
+function displayRangeHelper(btn, className){   
+
+  btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background: rgba(253, 34, 34, 0.5);}");
+
+}
+
