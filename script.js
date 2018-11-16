@@ -1,9 +1,10 @@
 //i is y, j is x
 
 var isMonsterClicked = false;
-var monster1Name = "bulbasaur"
-var monster1Pos = []; // i, j pair
-var monster2Pos = [];
+var monster1 = { i:7, j:7, name: "bulbasaur"};
+var monster2 = { i:0, j:0, name: "pikachu_flipped"};
+
+var currTurn = monster1; //monster1 move first
 
 
 
@@ -28,10 +29,10 @@ function setup() { //initialize everything
   fillMatrix();
   fillFunctionButtons();
 
-  setButtonImage(7,7,"bulbasaur");
-  monster1Pos = [7,7];
-  setButtonImage(0,0,"squirtle_flipped");
-  monster2Pos = [0,0];
+  setButtonImage(7,7,monster1.name);
+
+  setButtonImage(0,0,monster2.name);
+
 
 
 
@@ -136,23 +137,35 @@ function swapButton(i1, j1, i2, j2){
 
 function buttonClicked(i, j) {
 
+
   var imageName = getButtonImage(i, j);
   console.log(i + " " + j + " " + imageName);
-  if(imageName != "grid"){
+
+  if(imageName != "grid"){//if not grid, then it's a monster
     //monsterPos[0] == i
     //monsterPos[1] == j
-    displayRange(monster1Pos[0], monster1Pos[1], imageName); //if not grid, then it's a monster
+
+    if(imageName == currTurn.name){
+      displayRange(currTurn.i, currTurn.j, imageName);
+    }
+    //todo handle click not currTurn's monster
+    
   }
   else if(imageName == "grid" && isMonsterClicked){
     //movement
 
-    if(inRange(i, j, monster1Name)){  //if in valid range
-      swapButton(monster1Pos[0],monster1Pos[1],i,j);
-      monster1Pos[0] = i;
-      monster1Pos[1] = j;
+    if(inRange(i, j, currTurn.name)){  //if in valid range
+      swapButton(currTurn.i,currTurn.j,i,j);
+      currTurn['i'] = i;
+      currTurn['j'] = j;
       var placeholder = document.getElementById("button_"+ i +"_"+ j);
       placeholder.pseudoStyle("");
       isMonsterClicked = false;
+      if(currTurn == monster1){
+        currTurn = monster2;
+      }else{ //monster2
+       currTurn = monster1;
+      }
     }
   }
 }
@@ -166,6 +179,44 @@ function displayRange(curr_i, curr_j, monsterName){
 
       case "pikachu":
       case "pikachu_flipped":
+        var curr_i_copy = curr_i;
+        
+        curr_i++;
+        while(curr_i <= 7){
+          
+          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+          displayRangeHelper(curr, curr.getAttribute('id'));
+          curr_i++;
+        }
+        curr_i = curr_i_copy; //reset curr_i
+
+        curr_i--;
+        while(curr_i >= 0){
+          
+          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+          displayRangeHelper(curr, curr.getAttribute('id'));
+          curr_i--;
+        }
+        curr_i = curr_i_copy; //reset curr_i
+        ////////////////////////////////////////////////////////
+        var curr_j_copy = curr_j;
+        curr_j++;
+        while(curr_j <= 7){
+          
+          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+          displayRangeHelper(curr, curr.getAttribute('id'));
+          curr_j++;
+        }
+        curr_j = curr_j_copy;
+
+        curr_j--;
+        while(curr_j >= 0){
+          
+          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+          displayRangeHelper(curr, curr.getAttribute('id'));
+          curr_j--;
+        }
+
         break;
 
       case "squirtle":
@@ -228,6 +279,7 @@ function inRange(curr_i, curr_j, monsterName){
 
     case "pikachu":
     case "pikachu_flipped":
+      return curr_i == currTurn.i || curr_j == currTurn.j;
       break;
 
     case "squirtle":
@@ -236,7 +288,7 @@ function inRange(curr_i, curr_j, monsterName){
 
     case "bulbasaur":
     case "bulbasaur_flipped":
-      return (Math.abs(curr_i - monster1Pos[0]) <= 1) && (Math.abs(curr_j - monster1Pos[1]) <= 1);
+      return (Math.abs(curr_i - currTurn.i) <= 1) && (Math.abs(curr_j - currTurn.j) <= 1);
       break;
 
     case "charmander":
