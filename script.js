@@ -1,6 +1,6 @@
 //i is y, j is x
 
-var isMonsterClicked = false;
+var isMonsterClicked = false; //determine whether a monster is clicked
 var monster1 = { i:7, j:7, name: "bulbasaur"};
 var monster2 = { i:0, j:0, name: "pikachu_flipped"};
 
@@ -8,35 +8,15 @@ var currTurn = monster1; //monster1 move first
 
 
 
-HTMLElement.prototype.pseudoStyle = function(content){
-  var _this = this;
-  var _sheetId = "pseudoStyles";
-  var _head = document.head || document.getElementsByTagName('head')[0];
-  var _sheet = document.getElementById(_sheetId) || document.createElement('style');
-  _sheet.id = _sheetId;
-  if(content != ""){
-    _sheet.innerHTML += content;
-  }else{
-    _sheet.innerHTML = content;
-  }
- 
-  _head.appendChild(_sheet);
-  return this;
-};
-
 
 function setup() { //initialize everything
   fillMatrix();
   fillFunctionButtons();
+  fillStatusText();
 
   setButtonImage(7,7,monster1.name);
-
   setButtonImage(0,0,monster2.name);
-
-
-
-
-
+  setStatusText("Monster 1's turn");
 }
 
 function fillMatrix() {
@@ -88,6 +68,21 @@ function createDefaultButton() {
   return button;
 }
 
+function fillStatusText() {
+  var headDiv = document.getElementById("head");
+  var infoTextRow = createRow("ml-3");
+  infoTextRow.id = "infoText"; //set id of this element so we can change it later
+  headDiv.appendChild(infoTextRow);
+}
+
+function setStatusText(text) {
+  var textDiv = document.getElementById("infoText");
+  var newText = document.createElement("div");
+  newText.className = "text-center";
+  newText.appendChild(document.createTextNode(text));
+  textDiv.innerHTML = "";
+  textDiv.appendChild(newText);
+}
 
 
 
@@ -163,8 +158,10 @@ function buttonClicked(i, j) {
       isMonsterClicked = false;
       if(currTurn == monster1){
         currTurn = monster2;
+        setStatusText("Monster 2's turn");
       }else{ //monster2
        currTurn = monster1;
+       setStatusText("Monster 1's turn");
       }
     }
   }
@@ -271,6 +268,23 @@ function displayRangeHelper(btn, className){
   btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background: rgba(253, 34, 34, 0.5);}");
 
 }
+
+//helper function for DOM element: pseudoStyle()
+HTMLElement.prototype.pseudoStyle = function(content){
+  var _this = this;
+  var _sheetId = "pseudoStyles";  //id of the <style> tag
+  var _head = document.head || document.getElementsByTagName('head')[0]; //find the <head> tag
+  var _sheet = document.getElementById(_sheetId) || document.createElement('style'); //find the <style> tag or create a new one
+  _sheet.id = _sheetId;
+  if(content != ""){ //if not empty
+    _sheet.innerHTML += content; //append new class
+  }else{
+    _sheet.innerHTML = content; //clear all
+  }
+ 
+  _head.appendChild(_sheet);
+  return this;
+};
 
 function inRange(curr_i, curr_j, monsterName){
   //monsterPos[0] == i
