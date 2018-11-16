@@ -1,7 +1,8 @@
 //i is y, j is x
 
-
-var character1 = {name: "bulbasaur", isClick: false};
+var isMonsterClicked = false;
+var monster1Pos = []; // i, j pair
+var monster2Pos = [];
 
 
 
@@ -26,8 +27,10 @@ function setup() { //initialize everything
   fillMatrix();
   fillFunctionButtons();
 
-  setButtonImage(4,5,"bulbasaur");
-  setButtonImage(4,2,"squirtle_flipped");
+  setButtonImage(7,7,"bulbasaur");
+  monster1Pos = [7,7];
+  setButtonImage(0,0,"squirtle_flipped");
+  monster2Pos = [0,0];
 
 
 
@@ -75,7 +78,7 @@ function createDefaultButton() {
 
   //the text part
   var text = document.createElement("label");
-  text.setAttribute("class", "caption unselectable");
+  text.setAttribute("class", "");
   text.id = "text_" + i + "_" + j;
 
   button.appendChild(img);
@@ -128,30 +131,74 @@ function swapButton(i1, j1, i2, j2){
 }
 
 function buttonClicked(i, j) {
-  if(getButtonImage(i, j) != "grid"){
-    displayRange(i,j);
+  var imageName = getButtonImage(i, j);
+
+  if(imageName != "grid"){
+    //monsterPos[0] == i
+    //monsterPos[1] == j
+    displayRange(monster1Pos[0], monster1Pos[1], imageName); //if not grid, then it's a monster
+  }
+  else if(imageName == "grid" && isMonsterClicked){
+    //movement
+    if(inRange(i, j, imageName)){  //if in valid range
+
+    }
   }
 }
 
-function displayRange(i, j){
+function displayRange(curr_i, curr_j, monsterName){
+  
 
-  if(!character1.isClick){
+  if(!isMonsterClicked){
 
-    var left = document.getElementById("button_"+ i +"_"+ (j-1));
-    var right = document.getElementById("button_"+ i +"_"+ (j+1));
-    var top = document.getElementById("button_"+ (i-1) +"_"+ j);
-    var bottom = document.getElementById("button_"+ (i+1) +"_"+ j);
+    switch(monsterName){
 
-    displayRangeHelper(left, left.getAttribute('id'));
-    displayRangeHelper(right, right.getAttribute('id'));
-    displayRangeHelper(top, top.getAttribute('id'));
-    displayRangeHelper(bottom, bottom.getAttribute('id'));
+      case "pikachu":
+      case "pikachu_flipped":
+        break;
 
-    character1['isClick'] = true;
+      case "squirtle":
+      case "squirtle_flipped":
+        break;
+
+      case "bulbasaur":
+      case "bulbasaur_flipped":
+        if((curr_j-1) >= 0){
+          var left = document.getElementById("button_"+ curr_i +"_"+ (curr_j-1));
+          displayRangeHelper(left, left.getAttribute('id'));
+        }
+        
+        if((curr_j+1) <=7 ){
+          var right = document.getElementById("button_"+ curr_i +"_"+ (curr_j+1));
+          displayRangeHelper(right, right.getAttribute('id'));
+        }
+
+        if((curr_i-1) >=0 ){
+          var top = document.getElementById("button_"+ (curr_i-1) +"_"+ curr_j);
+          displayRangeHelper(top, top.getAttribute('id'));
+        }
+
+        if((curr_i+1) <=7 ){
+          var bottom = document.getElementById("button_"+ (curr_i+1) +"_"+ curr_j);
+          displayRangeHelper(bottom, bottom.getAttribute('id'));
+        }
+
+        break;
+
+      case "charmander":
+      case "charmander_flipped":
+        break;
+
+      default:
+        break;
+    }
+
+    isMonsterClicked = true;
+
   }else{
-    var placeholder = document.getElementById("button_"+ i +"_"+ j);
+    var placeholder = document.getElementById("button_"+ curr_i +"_"+ curr_j);
     placeholder.pseudoStyle("");
-    character1['isClick'] = false;
+    isMonsterClicked = false;
 
   }
 
@@ -161,5 +208,29 @@ function displayRangeHelper(btn, className){
 
   btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background: rgba(253, 34, 34, 0.5);}");
 
+}
+
+function inRange(curr_i, curr_j, monsterName){
+  switch(monsterName){
+
+    case "pikachu":
+    case "pikachu_flipped":
+      break;
+
+    case "squirtle":
+    case "squirtle_flipped":
+      break;
+
+    case "bulbasaur":
+    case "bulbasaur_flipped":
+      break;
+
+    case "charmander":
+    case "charmander_flipped":
+      break;
+
+    default:
+      break;
+    }
 }
 
