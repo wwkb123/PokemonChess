@@ -124,16 +124,40 @@ function getButtonImage(i, j) {
 
 //a function to initialize the stats of two monsters at the beginning of the game
 function initMonsterStats(){
+
+  
+  //for player 1
   var player1Div = document.getElementById("player1");
+
+  //monster name
+  var player1_nameDiv = document.createElement("div");
+  var  name1 = monster1.name;
+  
+  if(name1 == "pikachu" || name1 == "pikachu_flipped"){
+    player1_nameDiv.appendChild(document.createTextNode("Pikachu"));
+  }else if(name1 == "squirtle" || name1 == "squirtle_flipped"){
+    player1_nameDiv.appendChild(document.createTextNode("Squirtle"));
+  }else if(name1 == "bulbasaur" || name1 == "bulbasaur_flipped"){
+    player1_nameDiv.appendChild(document.createTextNode("Bulbasaur"));
+  }else if(name1 == "charmander" || name1 == "charmander_flipped"){
+    player1_nameDiv.appendChild(document.createTextNode("Charmander"));
+  }
+  
+  //hp
   var player1_hpDiv = document.createElement("div");
   player1_hpDiv.id = "player1_hp";
+  
+  player1_hpDiv.appendChild(document.createTextNode("HP: "));
+  for(var count = 0; count < 5; count++){
+    var hp = document.createElement("img");
+    hp.src = 'images/hp_small.png';
+    player1_hpDiv.appendChild(hp);
+  }
+  
 
-  var hp = document.createElement("img");
-  hp.src = 'images/hp_small.png';
-
-  player1_hpDiv.appendChild(document.createTextNode("text"));
-  player1_hpDiv.appendChild(hp);
+  player1Div.appendChild(player1_nameDiv);
   player1Div.appendChild(player1_hpDiv);
+  //end of player 1
 }
 
 
