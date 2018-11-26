@@ -19,6 +19,7 @@ function setup() { //initialize everything
 
   setButtonImage(7,7,monster1.name);
   setButtonImage(0,0,monster2.name);
+  initMonsterStats();
   setStatusText("Monster 1's turn");
 }
 
@@ -58,8 +59,8 @@ function createDefaultButton() {
   img.id = "img_" + i + "_" + j;
   img.setAttribute("src", "images/grid.jpg");
   img.setAttribute("alt", "grid");
-  img.setAttribute("width", "75");
-  img.setAttribute("height", "75");
+  img.setAttribute("width", "65");
+  img.setAttribute("height", "65");
 
   //the text part
   var text = document.createElement("label");
@@ -118,6 +119,21 @@ function setButtonImage(i, j, image) {
 function getButtonImage(i, j) {
   var img = document.getElementById("img_" + i + "_" + j);
   return img.getAttribute("alt");
+}
+
+
+//a function to initialize the stats of two monsters at the beginning of the game
+function initMonsterStats(){
+  var player1Div = document.getElementById("player1");
+  var player1_hpDiv = document.createElement("div");
+  player1_hpDiv.id = "player1_hp";
+
+  var hp = document.createElement("img");
+  hp.src = 'images/hp_small.png';
+
+  player1_hpDiv.appendChild(document.createTextNode("text"));
+  player1_hpDiv.appendChild(hp);
+  player1Div.appendChild(player1_hpDiv);
 }
 
 
