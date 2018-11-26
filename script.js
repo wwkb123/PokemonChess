@@ -7,7 +7,7 @@ var monster2 = { i:0, j:0, name: "pikachu_flipped"};
 var currTurn = monster1; //monster1 move first
 
 
-
+////////////////methods written by Professor Liu////////////////
 
 function setup() { //initialize everything
   fillMatrix();
@@ -85,8 +85,6 @@ function setStatusText(text) {
 }
 
 
-
-
 // helper functions below
 
 function createRow(className) {
@@ -98,6 +96,15 @@ function createRow(className) {
   }
   return rowDiv;
 }
+
+
+////////////////end of methods written by Professor Liu////////////////
+
+
+
+
+
+////////////////========methods written/overwritten by me========////////////////
 
 function setButtonImage(i, j, image) {
   var button = document.getElementById("img_" + i + "_" + j);
@@ -314,3 +321,7 @@ function inRange(curr_i, curr_j, monsterName){
     }
 }
 
+
+
+
+////////////////========end of methods written/overwritten by me========////////////////
