@@ -1,10 +1,13 @@
 //i is y, j is x
+//available monsters: pikachu, bulbasaur, squirtle, charmander
+//right hand side: player 1; left hand side: player 2
+// {monsterName}_flipped means it's player 2
 
 var isMonsterClicked = false; //determine whether a monster is clicked
 var monster1 = { i:7, j:7, name: "bulbasaur"};
 var monster2 = { i:0, j:0, name: "pikachu_flipped"};
 
-var currTurn = monster1; //monster1 move first
+var currTurn = monster1; //player 1's monster move first
 
 
 ////////////////methods written by Professor Liu////////////////
@@ -174,6 +177,8 @@ function buttonClicked(i, j) {
   }
 }
 
+
+//display the movement and attack range of a monster
 function displayRange(curr_i, curr_j, monsterName){
   
 
@@ -270,13 +275,14 @@ function displayRange(curr_i, curr_j, monsterName){
 
 }
 
+//display red layers to indicate the range
 function displayRangeHelper(btn, className){   
 
   btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background: rgba(253, 34, 34, 0.5);}");
 
 }
 
-//helper function for DOM element: pseudoStyle()
+//create a custom helper function for DOM element. Use pseudoStyle() to call
 HTMLElement.prototype.pseudoStyle = function(content){
   var _this = this;
   var _sheetId = "pseudoStyles";  //id of the <style> tag
@@ -293,6 +299,8 @@ HTMLElement.prototype.pseudoStyle = function(content){
   return this;
 };
 
+
+//check the (i, j) of a clicked grid is in that monster's movement range. If yes, move to that grid
 function inRange(curr_i, curr_j, monsterName){
   //monsterPos[0] == i
   //monsterPos[1] == j
