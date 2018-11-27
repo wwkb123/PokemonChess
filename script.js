@@ -4,8 +4,12 @@
 // {monsterName}_flipped means it's player 2
 
 var isMonsterClicked = false; //determine whether a monster is clicked
-var monster1 = { i:7, j:7, name: "bulbasaur"};
-var monster2 = { i:0, j:0, name: "pikachu_flipped"};
+
+
+//to do: let user to pick a pokemon, change stats accordingly
+
+var monster1 = { i:7, j:7, name: "bulbasaur", hp:5, atk:2, speed: 1, energy: 0};
+var monster2 = { i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 1, energy: 0};
 
 var currTurn = monster1; //player 1's monster move first
 
@@ -126,12 +130,13 @@ function getButtonImage(i, j) {
 function initMonsterStats(){
 
   
-  //for player 1
-  var player1Div = document.getElementById("player1");
+  var player1Div = document.getElementById("player1"); //player 1
+  var player2Div = document.getElementById("player2"); //player 2
 
   //monster name
   var player1_nameDiv = document.createElement("div");
-  var  name1 = monster1.name;
+  player1_nameDiv.setAttribute("style","font-weight:700");
+  var name1 = monster1.name;
   
   if(name1 == "pikachu" || name1 == "pikachu_flipped"){
     player1_nameDiv.appendChild(document.createTextNode("Pikachu"));
@@ -142,6 +147,7 @@ function initMonsterStats(){
   }else if(name1 == "charmander" || name1 == "charmander_flipped"){
     player1_nameDiv.appendChild(document.createTextNode("Charmander"));
   }
+  //end of monster name
   
   //hp
   var player1_hpDiv = document.createElement("div");
@@ -150,13 +156,41 @@ function initMonsterStats(){
   player1_hpDiv.appendChild(document.createTextNode("HP: "));
   for(var count = 0; count < 5; count++){
     var hp = document.createElement("img");
-    hp.src = 'images/hp_small.png';
+    hp.src = 'images/hp.png';
+    hp.setAttribute("width", "26");
     player1_hpDiv.appendChild(hp);
   }
+  //end of hp
+
+  //attack
+  var player1_atkDiv = document.createElement("div");
+  player1_atkDiv.id = "player1_atk";
+  player1_atkDiv.appendChild(document.createTextNode("ATK: "));
+  for(var count = 0; count < monster1.atk; count++){
+    var atk = document.createElement("img");
+    atk.src = 'images/attack.png';
+    atk.setAttribute("width", "26");
+    player1_atkDiv.appendChild(atk);
+  }
+  //end of attack
   
+
+  //speed
+  var player1_speedDiv = document.createElement("div");
+  player1_speedDiv.id = "player1_speed";
+  player1_speedDiv.appendChild(document.createTextNode("Speed: "));
+  for(var count = 0; count < monster1.speed; count++){
+    var speed = document.createElement("img");
+    speed.src = 'images/speed.png';
+    speed.setAttribute("width", "26");
+    player1_speedDiv.appendChild(speed);
+  }
+  //end of speed
 
   player1Div.appendChild(player1_nameDiv);
   player1Div.appendChild(player1_hpDiv);
+  player1Div.appendChild(player1_atkDiv);
+  player1Div.appendChild(player1_speedDiv);
   //end of player 1
 }
 
