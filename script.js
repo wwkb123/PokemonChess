@@ -1,4 +1,4 @@
-//i is y, j is x
+//i is y-position, j is x-position
 //available monsters: pikachu, bulbasaur, squirtle, charmander
 //right hand side: player 1; left hand side: player 2
 // {monsterName}_flipped means it's player 2
@@ -8,33 +8,34 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 
 //to do: let user to pick a pokemon, change stats accordingly
 
-var monster1 = { player:1, i:7, j:7, name: "bulbasaur", hp:5, atk:2, speed: 1, energy: 0};
-var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 5, energy: 0};
+var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0};
+var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
 
-var currTurn = monster1; //player 1's monster move first
+var currMonster = monster1; //player 1's monster move first
 
 
-////////////////methods written by Professor Liu////////////////
+
 
 function setup() { //initialize everything
   fillMatrix();
-  fillFunctionButtons();
-  fillStatusText();
+  //fillFunctionButtons();
+  //fillStatusText();
 
-  setButtonImage(7,7,monster1.name);
+  setButtonImage(7,15,monster1.name);
   setButtonImage(0,0,monster2.name);
   initMonsterStats(monster1); //player 1
   initMonsterStats(monster2); //player 2
-  setStatusText("Monster 1's turn");
+  //setStatusText("Monster 1's turn");
   document.getElementById("player1").setAttribute("style","border:3px solid red !important"); //a red frame indicates whose turn
   
 }
 
+////////////////methods written by Professor Liu////////////////
 function fillMatrix() {
   var matrix = document.getElementById("grid");
-  for (i = 0; i < 8; i++) {
+  for (var i = 0; i < 8; i++) {
     var newRow = createRow("justify-content-md-center");
-    for (j = 0; j < 8; j++) {
+    for (var j = 0; j < 16; j++) {
       newRow.appendChild(createDefaultButton(i, j));
     }
     matrix.appendChild(newRow);
@@ -53,7 +54,7 @@ function fillFunctionButtons() {
   headDiv.appendChild(funcBtnRow);
 }
 
-function createDefaultButton() {
+function createDefaultButton(i, j) {
   var button = document.createElement("div");
   button.className = "button_" + i + "_" + j;
   button.id = "button_" + i + "_" + j;
@@ -81,7 +82,7 @@ function createDefaultButton() {
 
 function fillStatusText() {
   var headDiv = document.getElementById("head");
-  var infoTextRow = createRow("ml-3");
+  var infoTextRow = createRow("ml-12");
   infoTextRow.id = "infoText"; //set id of this element so we can change it later
   headDiv.appendChild(infoTextRow);
 }
@@ -120,7 +121,7 @@ function setProgressBar(bar_id, color, value) {
   var bar = document.getElementById(bar_id);
   bar.className = "progress-bar " + color;
   bar.setAttribute("style", "width: " + value + "%");
-  bar.innerHTML = value + "%";
+  bar.innerHTML = value/20 + "/5";
 }
 
 
@@ -178,7 +179,7 @@ function initMonsterStats(monster){
   player_hpDiv.id = "player_" + monster.player + "_hp";  //e.g. player_1_hp
   
   player_hpDiv.appendChild(document.createTextNode("HP: "));
-  for(var count = 0; count < 5; count++){
+  for(var count = 0; count < monster.hp; count++){
     var hp = document.createElement("img");
     hp.src = 'images/hp.png';
     hp.setAttribute("width", "26");
@@ -228,8 +229,24 @@ function initMonsterStats(monster){
     var bar = createProgressBar("bar_" + monster.player, "bg-success", monster.energy);
     energyBarDiv.appendChild(bar);
 
+    //skill button
+    var skillButton = document.createElement("div");
+    skillButton.id = "player_" + monster.player + "_skill_button";
+    skillButton.setAttribute("onclick", "skillButtonClicked("+ monster.player +")");
+    skillButton.setAttribute("style","position: relative");
+    skillButton.setAttribute("class","col-sm-2");
+
+      //the image part
+      var img = document.createElement("img");
+      img.id = "player_" + monster.player + "_skill_img";
+      img.setAttribute("src", "images/skill_button_off.png");
+      img.setAttribute("height", "25px");
+
+    skillButton.appendChild(img);
+
   player_energyDiv.appendChild(energyTitleDiv);
   player_energyDiv.appendChild(energyBarDiv);
+  player_energyDiv.appendChild(skillButton);
   //end of energy
 
   playerDiv.appendChild(player_nameDiv);
@@ -255,15 +272,42 @@ function setHP(monster, newHP){
 
 }
 
-function setATK(monster, atk){
+function setATK(monster, newATK){
+  monster['atk'] = newATK;
+  var player_atkDiv = document.getElementById("player_" + monster.player + "_atk");
+  player_atkDiv.innerHTML = "";
 
+  player_atkDiv.appendChild(document.createTextNode("ATK: "));
+  for(var count = 0; count < newATK; count++){
+    var atk = document.createElement("img");
+    atk.src = 'images/attack.png';
+    atk.setAttribute("width", "26");
+    player_atkDiv.appendChild(atk);
+  }
 }
-function setSpeed(monster, speed){
 
+function setSpeed(monster, newSpeed){
+  monster['speed'] = newSpeed;
+  var player_speedDiv = document.getElementById("player_" + monster.player + "_speed");
+  player_speedDiv.innerHTML = "";
+
+  player_speedDiv.appendChild(document.createTextNode("Speed: "));
+  for(var count = 0; count < newSpeed; count++){
+    var speed = document.createElement("img");
+    speed.src = 'images/speed.png';
+    speed.setAttribute("width", "26");
+    player_speedDiv.appendChild(speed);
+  }
 }
 
-function setEnergy(monster, energy){
-
+function setEnergy(monster, newEnergy){
+  monster['energy'] = newEnergy;
+  setProgressBar("bar_" + monster.player, "bg-success", newEnergy);
+  if(monster.energy >= 100){ //if full, skill is activable
+    document.getElementById("player_" + monster.player + "_skill_img").setAttribute("src", "images/skill_button_on.png");
+  }else{
+    document.getElementById("player_" + monster.player + "_skill_img").setAttribute("src", "images/skill_button_off.png");
+  }
 }
 
 
@@ -291,36 +335,44 @@ function buttonClicked(i, j) {
   console.log(i + " " + j + " " + imageName);
 
   if(imageName != "grid"){//if not grid, then it's a monster
-    //monsterPos[0] == i
-    //monsterPos[1] == j
-
-    if(imageName == currTurn.name){
-      displayRange(currTurn.i, currTurn.j, imageName);
+    /*  
+        in this program,
+        monsterPos[0] == i
+        monsterPos[1] == j
+    */
+    if(imageName == currMonster.name){
+      displayRange(currMonster);
     }
-    //todo handle click not currTurn's monster
+    //todo handle click not curr turn's monster
     
   }
   else if(imageName == "grid" && isMonsterClicked){
     //movement
 
-    if(inRange(i, j, currTurn.name)){  //if in valid range
-      swapButton(currTurn.i,currTurn.j,i,j);
-      currTurn['i'] = i;
-      currTurn['j'] = j;
+    if(inRange(i, j, currMonster)){  //if in valid range
+      swapButton(currMonster.i, currMonster.j, i, j); //update image
+      currMonster['i'] = i;  //update i
+      currMonster['j'] = j;  //update j
       var placeholder = document.getElementById("button_"+ i +"_"+ j);
-      placeholder.pseudoStyle("");
+      placeholder.pseudoStyle("");  //remove the red layers
       isMonsterClicked = false;
-      if(currTurn == monster1){
+
+      if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
+          setEnergy(currMonster, currMonster.energy+20);
+      }
+
+      if(currMonster == monster1){
         //move the red frame to another player
         document.getElementById("player1").removeAttribute("style");
         document.getElementById("player2").setAttribute("style","border:3px solid red !important");
-        currTurn = monster2;
-        setStatusText("Monster 2's turn");
+        
+        currMonster = monster2;
+        //setStatusText("Monster 2's turn");
       }else{ //monster2
         document.getElementById("player2").removeAttribute("style");
         document.getElementById("player1").setAttribute("style","border:3px solid red !important");
-        currTurn = monster1;
-        setStatusText("Monster 1's turn");
+        currMonster = monster1;
+        //setStatusText("Monster 1's turn");
       }
     }
   }
@@ -328,12 +380,43 @@ function buttonClicked(i, j) {
 
 
 //display the movement and attack range of a monster
-function displayRange(curr_i, curr_j, monsterName){
+function displayRange(monster){
   
 
   if(!isMonsterClicked){
 
-    switch(monsterName){
+    //initialize the starting i,j to search for proper grids to display the range
+    var start_i = monster.i - monster.speed;
+    while(start_i < 0){
+      start_i++;
+    }
+    var start_j = monster.j - monster.speed;
+    while(start_j < 0){
+      start_j++;
+    }
+
+    var end_i = monster.i + monster.speed;
+    while(end_i > 8){
+      end_i--;
+    }
+    var end_j = monster.j + monster.speed;
+    while(end_j > 16){
+      end_j--;
+    }
+
+    for(var i = start_i; i < end_i; i++){
+      for(var j = start_j; j < end_j; j++){
+        var distance = Math.sqrt(Math.pow((i - monster.i),2) + Math.pow((j - monster.j),2));  //distance formulat
+        if(distance <= monster.speed && distance != 0){
+          var currButton = document.getElementById("button_"+ i +"_"+ j);
+          currButton.setAttribute("alt","range");
+          displayRangeHelper(currButton, currButton.getAttribute('id'));  //show the red layer
+        }
+      }
+    }
+    
+    /*
+    switch(monster.name){
 
       case "pikachu":
       case "pikachu_flipped":
@@ -379,6 +462,7 @@ function displayRange(curr_i, curr_j, monsterName){
 
       case "squirtle":
       case "squirtle_flipped":
+
         break;
 
       case "bulbasaur":
@@ -413,10 +497,12 @@ function displayRange(curr_i, curr_j, monsterName){
         break;
     }
 
+    */
+
     isMonsterClicked = true;
 
   }else{
-    var placeholder = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+    var placeholder = document.getElementById("button_"+ monster.i +"_"+ monster.j);
     placeholder.pseudoStyle("");
     isMonsterClicked = false;
 
@@ -450,14 +536,14 @@ HTMLElement.prototype.pseudoStyle = function(content){
 
 
 //check the (i, j) of a clicked grid is in that monster's movement range. If yes, move to that grid
-function inRange(curr_i, curr_j, monsterName){
+function inRange(curr_i, curr_j, monster){
   //monsterPos[0] == i
   //monsterPos[1] == j
-  switch(monsterName){
+  switch(monster.name){
 
     case "pikachu":
     case "pikachu_flipped":
-      return curr_i == currTurn.i || curr_j == currTurn.j;
+      return curr_i == currMonster.i || curr_j == currMonster.j;
       break;
 
     case "squirtle":
@@ -466,7 +552,7 @@ function inRange(curr_i, curr_j, monsterName){
 
     case "bulbasaur":
     case "bulbasaur_flipped":
-      return (Math.abs(curr_i - currTurn.i) <= 1) && (Math.abs(curr_j - currTurn.j) <= 1) && (curr_i == currTurn.i || curr_j == currTurn.j);
+      return (Math.abs(curr_i - currMonster.i) <= 1) && (Math.abs(curr_j - currMonster.j) <= 1) && (curr_i == currMonster.i || curr_j == currMonster.j);
       break;
 
     case "charmander":
@@ -476,6 +562,11 @@ function inRange(curr_i, curr_j, monsterName){
     default:
       break;
     }
+}
+
+//take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
+function skillButtonClicked(player){
+
 }
 
 
