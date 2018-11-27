@@ -240,6 +240,32 @@ function initMonsterStats(monster){
   //end of initilizing stats
 }
 
+function setHP(monster, newHP){
+  monster['hp'] = newHP;
+  var player_hpDiv = document.getElementById("player_" + monster.player + "_hp");
+  player_hpDiv.innerHTML = "";
+
+  player_hpDiv.appendChild(document.createTextNode("HP: "));
+  for(var count = 0; count < newHP; count++){
+    var hp = document.createElement("img");
+    hp.src = 'images/hp.png';
+    hp.setAttribute("width", "26");
+    player_hpDiv.appendChild(hp);
+  }
+
+}
+
+function setATK(monster, atk){
+
+}
+function setSpeed(monster, speed){
+
+}
+
+function setEnergy(monster, energy){
+
+}
+
 
 //to move a character
 //swap(oldImage, newImage)
