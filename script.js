@@ -164,13 +164,13 @@ function initMonsterStats(monster){
   var monsterName = monster.name;
   
   if(monsterName == "pikachu" || monsterName == "pikachu_flipped"){
-    player_nameDiv.appendChild(document.createTextNode("Pikachu"));
+    player_nameDiv.appendChild(document.createTextNode("Player " + monster.player + ": Pikachu"));
   }else if(monsterName == "squirtle" || monsterName == "squirtle_flipped"){
-    player_nameDiv.appendChild(document.createTextNode("Squirtle"));
+    player_nameDiv.appendChild(document.createTextNode("Player " + monster.player + ": Squirtle"));
   }else if(monsterName == "bulbasaur" || monsterName == "bulbasaur_flipped"){
-    player_nameDiv.appendChild(document.createTextNode("Bulbasaur"));
+    player_nameDiv.appendChild(document.createTextNode("Player " + monster.player + ": Bulbasaur"));
   }else if(monsterName == "charmander" || monsterName == "charmander_flipped"){
-    player_nameDiv.appendChild(document.createTextNode("Charmander"));
+    player_nameDiv.appendChild(document.createTextNode("Player " + monster.player + ": Charmander"));
   }
   //end of monster name
   
@@ -352,7 +352,7 @@ function buttonClicked(i, j) {
     //movement
 
     if(inRange(i, j, currMonster)){  //if in valid range
-      cleanRange();  //clean all the "range" tags
+      cleanRangeTag();  //clean all the "range" tags
       swapButton(currMonster.i, currMonster.j, i, j); //update image
       currMonster['i'] = i;  //update i
       currMonster['j'] = j;  //update j
@@ -423,6 +423,8 @@ function displayRange(monster){
 
       }//end of inner loop
     }//end of outer loop
+
+
   }else{
 
     cleanRangeTag(); //clean all the "range" tags
@@ -471,7 +473,7 @@ function inRange(curr_i, curr_j, monster){
 
 
 //a function to clean all the red layers that indicate the range
-function cleanRange(){
+function cleanRangeTag(){
 
   //remove "range" tag
   for(var i = 0; i < 8; i++){
