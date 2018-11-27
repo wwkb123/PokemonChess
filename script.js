@@ -21,8 +21,8 @@ function setup() { //initialize everything
   //fillFunctionButtons();
   //fillStatusText();
 
-  setButtonImage(7,15,monster1.name);
-  setButtonImage(0,0,monster2.name);
+  setButtonImage(7,15,monster1.name);  //bottom right corner
+  setButtonImage(0,0,monster2.name);  //top left corner
   initMonsterStats(monster1); //player 1
   initMonsterStats(monster2); //player 2
   //setStatusText("Monster 1's turn");
@@ -340,16 +340,19 @@ function buttonClicked(i, j) {
         monsterPos[0] == i
         monsterPos[1] == j
     */
+
+    //display only curr turn's monster's range
     if(imageName == currMonster.name){
       displayRange(currMonster);
     }
-    //todo handle click not curr turn's monster
+    
     
   }
   else if(imageName == "grid" && isMonsterClicked){
     //movement
 
     if(inRange(i, j, currMonster)){  //if in valid range
+      cleanRange();  //clean all the "range" tags
       swapButton(currMonster.i, currMonster.j, i, j); //update image
       currMonster['i'] = i;  //update i
       currMonster['j'] = j;  //update j
@@ -383,9 +386,9 @@ function buttonClicked(i, j) {
 function displayRange(monster){
   
 
+  
   if(!isMonsterClicked){
-
-    //initialize the starting i,j to search for proper grids to display the range
+    //initialize legal and small range of starting i and j, to search for proper grids to display monster's range
     var start_i = monster.i - monster.speed;
     while(start_i < 0){
       start_i++;
@@ -396,118 +399,39 @@ function displayRange(monster){
     }
 
     var end_i = monster.i + monster.speed;
-    while(end_i > 8){
+    while(end_i > 7){
       end_i--;
     }
     var end_j = monster.j + monster.speed;
-    while(end_j > 16){
+    while(end_j > 15){
       end_j--;
     }
 
-    for(var i = start_i; i < end_i; i++){
-      for(var j = start_j; j < end_j; j++){
-        var distance = Math.sqrt(Math.pow((i - monster.i),2) + Math.pow((j - monster.j),2));  //distance formulat
+    for(var i = start_i; i <= end_i; i++){
+      for(var j = start_j; j <= end_j; j++){
+
+        //var distance = Math.sqrt(Math.pow((i - monster.i),2) + Math.pow((j - monster.j),2));  //distance formulat
+        var distance = Math.abs(i - monster.i) + Math.abs(j - monster.j); //distance on the grid system
         if(distance <= monster.speed && distance != 0){
+
           var currButton = document.getElementById("button_"+ i +"_"+ j);
           currButton.setAttribute("alt","range");
           displayRangeHelper(currButton, currButton.getAttribute('id'));  //show the red layer
-        }
-      }
-    }
-    
-    /*
-    switch(monster.name){
 
-      case "pikachu":
-      case "pikachu_flipped":
-        var curr_i_copy = curr_i;
-        
-        curr_i++;
-        while(curr_i <= 7){
-          
-          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
-          displayRangeHelper(curr, curr.getAttribute('id'));
-          curr_i++;
-        }
-        curr_i = curr_i_copy; //reset curr_i
+        }//end of if distance is in range
 
-        curr_i--;
-        while(curr_i >= 0){
-          
-          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
-          displayRangeHelper(curr, curr.getAttribute('id'));
-          curr_i--;
-        }
-        curr_i = curr_i_copy; //reset curr_i
-        ////////////////////////////////////////////////////////
-        var curr_j_copy = curr_j;
-        curr_j++;
-        while(curr_j <= 7){
-          
-          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
-          displayRangeHelper(curr, curr.getAttribute('id'));
-          curr_j++;
-        }
-        curr_j = curr_j_copy;
 
-        curr_j--;
-        while(curr_j >= 0){
-          
-          var curr = document.getElementById("button_"+ curr_i +"_"+ curr_j);
-          displayRangeHelper(curr, curr.getAttribute('id'));
-          curr_j--;
-        }
-
-        break;
-
-      case "squirtle":
-      case "squirtle_flipped":
-
-        break;
-
-      case "bulbasaur":
-      case "bulbasaur_flipped":
-        if((curr_j-1) >= 0){
-          var left = document.getElementById("button_"+ curr_i +"_"+ (curr_j-1));
-          displayRangeHelper(left, left.getAttribute('id'));
-        }
-        
-        if((curr_j+1) <=7 ){
-          var right = document.getElementById("button_"+ curr_i +"_"+ (curr_j+1));
-          displayRangeHelper(right, right.getAttribute('id'));
-        }
-
-        if((curr_i-1) >=0 ){
-          var top = document.getElementById("button_"+ (curr_i-1) +"_"+ curr_j);
-          displayRangeHelper(top, top.getAttribute('id'));
-        }
-
-        if((curr_i+1) <=7 ){
-          var bottom = document.getElementById("button_"+ (curr_i+1) +"_"+ curr_j);
-          displayRangeHelper(bottom, bottom.getAttribute('id'));
-        }
-
-        break;
-
-      case "charmander":
-      case "charmander_flipped":
-        break;
-
-      default:
-        break;
-    }
-
-    */
-
-    isMonsterClicked = true;
-
+      }//end of inner loop
+    }//end of outer loop
   }else{
+
+    cleanRangeTag(); //clean all the "range" tags
     var placeholder = document.getElementById("button_"+ monster.i +"_"+ monster.j);
     placeholder.pseudoStyle("");
-    isMonsterClicked = false;
-
   }
+    
 
+  isMonsterClicked = !isMonsterClicked;  //toggle the state
 }
 
 //display red layers to indicate the range
@@ -539,29 +463,25 @@ HTMLElement.prototype.pseudoStyle = function(content){
 function inRange(curr_i, curr_j, monster){
   //monsterPos[0] == i
   //monsterPos[1] == j
-  switch(monster.name){
+  var currButton = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+  return currButton.getAttribute("alt") == "range";
 
-    case "pikachu":
-    case "pikachu_flipped":
-      return curr_i == currMonster.i || curr_j == currMonster.j;
-      break;
+  
+}
 
-    case "squirtle":
-    case "squirtle_flipped":
-      break;
 
-    case "bulbasaur":
-    case "bulbasaur_flipped":
-      return (Math.abs(curr_i - currMonster.i) <= 1) && (Math.abs(curr_j - currMonster.j) <= 1) && (curr_i == currMonster.i || curr_j == currMonster.j);
-      break;
+//a function to clean all the red layers that indicate the range
+function cleanRange(){
 
-    case "charmander":
-    case "charmander_flipped":
-      break;
-
-    default:
-      break;
+  //remove "range" tag
+  for(var i = 0; i < 8; i++){
+    for(var j = 0; j < 16; j++){
+      var currButton = document.getElementById("button_"+ i +"_"+ j);
+      if(currButton.getAttribute("alt") == "range"){
+        currButton.removeAttribute("alt");
+      }
     }
+  }
 }
 
 //take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
