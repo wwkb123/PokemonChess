@@ -8,8 +8,8 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 
 //to do: let user to pick a pokemon, change stats accordingly
 
-var monster1 = { i:7, j:7, name: "bulbasaur", hp:5, atk:2, speed: 1, energy: 0};
-var monster2 = { i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 1, energy: 0};
+var monster1 = { player:1, i:7, j:7, name: "bulbasaur", hp:5, atk:2, speed: 1, energy: 0};
+var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 5, energy: 0};
 
 var currTurn = monster1; //player 1's monster move first
 
@@ -23,8 +23,11 @@ function setup() { //initialize everything
 
   setButtonImage(7,7,monster1.name);
   setButtonImage(0,0,monster2.name);
-  initMonsterStats();
+  initMonsterStats(monster1); //player 1
+  initMonsterStats(monster2); //player 2
   setStatusText("Monster 1's turn");
+  document.getElementById("player1").setAttribute("style","border:3px solid red !important"); //a red frame indicates whose turn
+  
 }
 
 function fillMatrix() {
@@ -105,6 +108,21 @@ function createRow(className) {
   return rowDiv;
 }
 
+function createProgressBar(bar_id, color, value) {
+  var bar = document.createElement("div");
+  bar.id = bar_id;
+  bar.className = "progress-bar " + color;
+  bar.setAttribute("style", "width: " + value + "%");
+  return bar;
+}
+
+function setProgressBar(bar_id, color, value) {
+  var bar = document.getElementById(bar_id);
+  bar.className = "progress-bar " + color;
+  bar.setAttribute("style", "width: " + value + "%");
+  bar.innerHTML = value + "%";
+}
+
 
 ////////////////end of methods written by Professor Liu////////////////
 
@@ -127,71 +145,99 @@ function getButtonImage(i, j) {
 
 
 //a function to initialize the stats of two monsters at the beginning of the game
-function initMonsterStats(){
+function initMonsterStats(monster){
 
+  var playerDiv;
+
+  if(monster.player == 1){
+    playerDiv = document.getElementById("player1"); //player 1
+
+  }else if(monster.player == 2){
+    playerDiv = document.getElementById("player2"); //player 2
+  }
   
-  var player1Div = document.getElementById("player1"); //player 1
-  var player2Div = document.getElementById("player2"); //player 2
 
   //monster name
-  var player1_nameDiv = document.createElement("div");
-  player1_nameDiv.setAttribute("style","font-weight:700");
-  var name1 = monster1.name;
+  var player_nameDiv = document.createElement("div");
+  player_nameDiv.setAttribute("style","font-weight:700");
+  var monsterName = monster.name;
   
-  if(name1 == "pikachu" || name1 == "pikachu_flipped"){
-    player1_nameDiv.appendChild(document.createTextNode("Pikachu"));
-  }else if(name1 == "squirtle" || name1 == "squirtle_flipped"){
-    player1_nameDiv.appendChild(document.createTextNode("Squirtle"));
-  }else if(name1 == "bulbasaur" || name1 == "bulbasaur_flipped"){
-    player1_nameDiv.appendChild(document.createTextNode("Bulbasaur"));
-  }else if(name1 == "charmander" || name1 == "charmander_flipped"){
-    player1_nameDiv.appendChild(document.createTextNode("Charmander"));
+  if(monsterName == "pikachu" || monsterName == "pikachu_flipped"){
+    player_nameDiv.appendChild(document.createTextNode("Pikachu"));
+  }else if(monsterName == "squirtle" || monsterName == "squirtle_flipped"){
+    player_nameDiv.appendChild(document.createTextNode("Squirtle"));
+  }else if(monsterName == "bulbasaur" || monsterName == "bulbasaur_flipped"){
+    player_nameDiv.appendChild(document.createTextNode("Bulbasaur"));
+  }else if(monsterName == "charmander" || monsterName == "charmander_flipped"){
+    player_nameDiv.appendChild(document.createTextNode("Charmander"));
   }
   //end of monster name
   
   //hp
-  var player1_hpDiv = document.createElement("div");
-  player1_hpDiv.id = "player1_hp";
+  var player_hpDiv = document.createElement("div");
+  player_hpDiv.id = "player_" + monster.player + "_hp";  //e.g. player_1_hp
   
-  player1_hpDiv.appendChild(document.createTextNode("HP: "));
+  player_hpDiv.appendChild(document.createTextNode("HP: "));
   for(var count = 0; count < 5; count++){
     var hp = document.createElement("img");
     hp.src = 'images/hp.png';
     hp.setAttribute("width", "26");
-    player1_hpDiv.appendChild(hp);
+    player_hpDiv.appendChild(hp);
   }
   //end of hp
 
   //attack
-  var player1_atkDiv = document.createElement("div");
-  player1_atkDiv.id = "player1_atk";
-  player1_atkDiv.appendChild(document.createTextNode("ATK: "));
-  for(var count = 0; count < monster1.atk; count++){
+  var player_atkDiv = document.createElement("div");
+  player_atkDiv.id = "player_" + monster.player + "_atk";
+  player_atkDiv.appendChild(document.createTextNode("ATK: "));
+  for(var count = 0; count < monster.atk; count++){
     var atk = document.createElement("img");
     atk.src = 'images/attack.png';
     atk.setAttribute("width", "26");
-    player1_atkDiv.appendChild(atk);
+    player_atkDiv.appendChild(atk);
   }
   //end of attack
   
 
   //speed
-  var player1_speedDiv = document.createElement("div");
-  player1_speedDiv.id = "player1_speed";
-  player1_speedDiv.appendChild(document.createTextNode("Speed: "));
-  for(var count = 0; count < monster1.speed; count++){
+  var player_speedDiv = document.createElement("div");
+  player_speedDiv.id = "player_" + monster.player + "_speed";
+  player_speedDiv.appendChild(document.createTextNode("Speed: "));
+  for(var count = 0; count < monster.speed; count++){
     var speed = document.createElement("img");
     speed.src = 'images/speed.png';
     speed.setAttribute("width", "26");
-    player1_speedDiv.appendChild(speed);
+    player_speedDiv.appendChild(speed);
   }
   //end of speed
 
-  player1Div.appendChild(player1_nameDiv);
-  player1Div.appendChild(player1_hpDiv);
-  player1Div.appendChild(player1_atkDiv);
-  player1Div.appendChild(player1_speedDiv);
-  //end of player 1
+  //energy
+  var player_energyDiv = createRow("");
+
+    //the title
+    var energyTitleDiv = document.createElement("div");
+    energyTitleDiv.setAttribute("class","col-sm-2");
+    energyTitleDiv.appendChild(document.createTextNode("Energy: "));
+
+    //the bar
+    var energyBarDiv = document.createElement("div");
+    energyBarDiv.setAttribute("class","col-sm-4 progress");
+    energyBarDiv.setAttribute("style","height:1.5rem !important; padding:0"); //overwrite the original height and padding
+    
+    //a green colored bar
+    var bar = createProgressBar("bar_" + monster.player, "bg-success", monster.energy);
+    energyBarDiv.appendChild(bar);
+
+  player_energyDiv.appendChild(energyTitleDiv);
+  player_energyDiv.appendChild(energyBarDiv);
+  //end of energy
+
+  playerDiv.appendChild(player_nameDiv);
+  playerDiv.appendChild(player_hpDiv);
+  playerDiv.appendChild(player_atkDiv);
+  playerDiv.appendChild(player_speedDiv);
+  playerDiv.appendChild(player_energyDiv);
+  //end of initilizing stats
 }
 
 
@@ -210,12 +256,10 @@ function swapButton(i1, j1, i2, j2){
 
   button1.setAttribute("alt", newImage);
   button2.setAttribute("alt", oldImage);
-
-
 }
 
-function buttonClicked(i, j) {
 
+function buttonClicked(i, j) {
 
   var imageName = getButtonImage(i, j);
   console.log(i + " " + j + " " + imageName);
@@ -241,11 +285,16 @@ function buttonClicked(i, j) {
       placeholder.pseudoStyle("");
       isMonsterClicked = false;
       if(currTurn == monster1){
+        //move the red frame to another player
+        document.getElementById("player1").removeAttribute("style");
+        document.getElementById("player2").setAttribute("style","border:3px solid red !important");
         currTurn = monster2;
         setStatusText("Monster 2's turn");
       }else{ //monster2
-       currTurn = monster1;
-       setStatusText("Monster 1's turn");
+        document.getElementById("player2").removeAttribute("style");
+        document.getElementById("player1").setAttribute("style","border:3px solid red !important");
+        currTurn = monster1;
+        setStatusText("Monster 1's turn");
       }
     }
   }
