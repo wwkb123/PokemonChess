@@ -52,6 +52,119 @@ function setStatusText(text) {
 }
 
 
+function buttonClicked(i, j) {
+
+  var imageName = getButtonImage(i, j);
+  console.log(i + " " + j + " " + imageName);
+
+  if(imageName != "grid"){//if not grid, then it's a monster
+    /*  
+        in this program,
+        monsterPos[0] == i
+        monsterPos[1] == j
+    */
+
+    //display only curr turn's monster's range
+    if(imageName == currMonster.name){
+      displayRange(currMonster);
+    }
+    
+    
+  }
+  else if(imageName == "grid" && isMonsterClicked){
+    //movement
+
+    if(inRange(i, j, currMonster)){  //if in valid range
+      cleanRangeTag();  //clean all the "range" tags
+      swapButton(currMonster.i, currMonster.j, i, j); //update image
+      currMonster['i'] = i;  //update i of currMonster after moving
+      currMonster['j'] = j;  //update j
+      var placeholder = document.getElementById("button_"+ i +"_"+ j);  //a placeholder element, created just for calling pseudoStyle("") to clean all red layers
+      placeholder.pseudoStyle("");  //remove the red layers
+      isMonsterClicked = false;
+
+      if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
+          setEnergy(currMonster, currMonster.energy+100);
+      }
+      nextTurn();  //go to the next turn
+    }
+  }
+}
+
+
+//helper function to go to the next turn
+function nextTurn(){
+  if(currMonster == monster1){
+    //move the red frame to another player
+    document.getElementById("player1").removeAttribute("style");
+    document.getElementById("player2").setAttribute("style","border:3px solid red !important");
+          
+    currMonster = monster2;
+    //setStatusText("Monster 2's turn");
+  }else{ //monster2
+    document.getElementById("player2").removeAttribute("style");
+    document.getElementById("player1").setAttribute("style","border:3px solid red !important");
+    currMonster = monster1;
+    //setStatusText("Monster 1's turn");
+  }
+
+}
+
+
+//display the movement and attack range of a monster
+function displayRange(monster){
+  
+
+  
+  if(!isMonsterClicked){
+    //initialize legal and small range of starting i and j, to search for proper grids to display monster's range
+    var start_i = monster.i - monster.speed;
+    while(start_i < 0){
+      start_i++;
+    }
+    var start_j = monster.j - monster.speed;
+    while(start_j < 0){
+      start_j++;
+    }
+
+    var end_i = monster.i + monster.speed;
+    while(end_i > 7){
+      end_i--;
+    }
+    var end_j = monster.j + monster.speed;
+    while(end_j > 15){
+      end_j--;
+    }
+
+    for(var i = start_i; i <= end_i; i++){
+      for(var j = start_j; j <= end_j; j++){
+
+        //var distance = Math.sqrt(Math.pow((i - monster.i),2) + Math.pow((j - monster.j),2));  //distance formulat
+        var distance = Math.abs(i - monster.i) + Math.abs(j - monster.j); //distance on the grid system
+        if(distance <= monster.speed && distance != 0){
+
+          var currButton = document.getElementById("button_"+ i +"_"+ j);
+          currButton.setAttribute("alt","range");
+          displayRangeHelper(currButton, currButton.getAttribute('id'));  //show the red layer
+
+        }//end of if distance is in range
+
+
+      }//end of inner loop
+    }//end of outer loop
+
+
+  }else{
+
+    cleanRangeTag(); //clean all the "range" tags
+    var placeholder = document.getElementById("button_"+ monster.i +"_"+ monster.j);
+    placeholder.pseudoStyle("");
+  }
+    
+
+  isMonsterClicked = !isMonsterClicked;  //toggle the state
+}
+
 
 function setButtonImage(i, j, image) {
   var button = document.getElementById("img_" + i + "_" + j);
@@ -266,112 +379,7 @@ function swapButton(i1, j1, i2, j2){
 }
 
 
-function buttonClicked(i, j) {
 
-  var imageName = getButtonImage(i, j);
-  console.log(i + " " + j + " " + imageName);
-
-  if(imageName != "grid"){//if not grid, then it's a monster
-    /*  
-        in this program,
-        monsterPos[0] == i
-        monsterPos[1] == j
-    */
-
-    //display only curr turn's monster's range
-    if(imageName == currMonster.name){
-      displayRange(currMonster);
-    }
-    
-    
-  }
-  else if(imageName == "grid" && isMonsterClicked){
-    //movement
-
-    if(inRange(i, j, currMonster)){  //if in valid range
-      cleanRangeTag();  //clean all the "range" tags
-      swapButton(currMonster.i, currMonster.j, i, j); //update image
-      currMonster['i'] = i;  //update i of currMonster after moving
-      currMonster['j'] = j;  //update j
-      var placeholder = document.getElementById("button_"+ i +"_"+ j);  //a placeholder element, created just for calling pseudoStyle("") to clean all red layers
-      placeholder.pseudoStyle("");  //remove the red layers
-      isMonsterClicked = false;
-
-      if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
-          setEnergy(currMonster, currMonster.energy+100);
-      }
-
-      if(currMonster == monster1){
-        //move the red frame to another player
-        document.getElementById("player1").removeAttribute("style");
-        document.getElementById("player2").setAttribute("style","border:3px solid red !important");
-        
-        currMonster = monster2;
-        //setStatusText("Monster 2's turn");
-      }else{ //monster2
-        document.getElementById("player2").removeAttribute("style");
-        document.getElementById("player1").setAttribute("style","border:3px solid red !important");
-        currMonster = monster1;
-        //setStatusText("Monster 1's turn");
-      }
-    }
-  }
-}
-
-
-//display the movement and attack range of a monster
-function displayRange(monster){
-  
-
-  
-  if(!isMonsterClicked){
-    //initialize legal and small range of starting i and j, to search for proper grids to display monster's range
-    var start_i = monster.i - monster.speed;
-    while(start_i < 0){
-      start_i++;
-    }
-    var start_j = monster.j - monster.speed;
-    while(start_j < 0){
-      start_j++;
-    }
-
-    var end_i = monster.i + monster.speed;
-    while(end_i > 7){
-      end_i--;
-    }
-    var end_j = monster.j + monster.speed;
-    while(end_j > 15){
-      end_j--;
-    }
-
-    for(var i = start_i; i <= end_i; i++){
-      for(var j = start_j; j <= end_j; j++){
-
-        //var distance = Math.sqrt(Math.pow((i - monster.i),2) + Math.pow((j - monster.j),2));  //distance formulat
-        var distance = Math.abs(i - monster.i) + Math.abs(j - monster.j); //distance on the grid system
-        if(distance <= monster.speed && distance != 0){
-
-          var currButton = document.getElementById("button_"+ i +"_"+ j);
-          currButton.setAttribute("alt","range");
-          displayRangeHelper(currButton, currButton.getAttribute('id'));  //show the red layer
-
-        }//end of if distance is in range
-
-
-      }//end of inner loop
-    }//end of outer loop
-
-
-  }else{
-
-    cleanRangeTag(); //clean all the "range" tags
-    var placeholder = document.getElementById("button_"+ monster.i +"_"+ monster.j);
-    placeholder.pseudoStyle("");
-  }
-    
-
-  isMonsterClicked = !isMonsterClicked;  //toggle the state
-}
 
 //display red layers to indicate the range
 function displayRangeHelper(btn, className){   
@@ -495,6 +503,7 @@ function skillButtonClicked(player){
             }//end of else
           }//end of animation
           
+          
           break;
 
         case "squirtle":
@@ -566,7 +575,7 @@ function skillButtonClicked(player){
             }//end of else
           }//end of animation
           
-       
+          
           break;
 
         case "charmander":
@@ -578,6 +587,10 @@ function skillButtonClicked(player){
 
       }// end of switch
       setEnergy(currMonster, 0); //empty the energy
+      setTimeout(function(){
+        nextTurn(); //wait until the animation thread is read, go to the next turn
+      }, 1000); //delay to wait for the animation pass through
+      
     }
   }
 }
@@ -608,10 +621,6 @@ function displaySkillHelper(btn, skill){
 
 }
 
-function hideSkillHelper(btn){
-  if(btn == null) return;
-
-}
 
 //helper function to return damage of a skill
 function skillDamage(skillName){
