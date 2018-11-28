@@ -9,7 +9,7 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 //to do: let user to pick a pokemon, change stats accordingly
 
 var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0};
-var monster2 = { player:2, i:7, j:13, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
+var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
 
 var currMonster = monster1; //player 1's monster move first
 
@@ -23,6 +23,7 @@ var currMonster = monster1; //player 1's monster move first
 
 function choosePokemon(){
   setup();
+  document.getElementById("chooseArea").setAttribute("style","display:none");
 }
 
 
