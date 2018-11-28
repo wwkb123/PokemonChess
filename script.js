@@ -576,6 +576,15 @@ function skillButtonClicked(player){
           var left_j = j - 1;
           var right_j = j + 1;
 
+          var upButton = document.getElementById("button_"+ up_i +"_"+ j);
+          var downButton = document.getElementById("button_"+ down_i +"_"+ j);
+          var leftButton = document.getElementById("button_"+ i +"_"+ left_j);
+          var rightButton = document.getElementById("button_"+ i +"_"+ right_j);
+          displaySkillHelper(upButton, "leaf");  //show the skill image layer
+          displaySkillHelper(downButton, "leaf");
+          displaySkillHelper(leftButton, "leaf");
+          displaySkillHelper(rightButton, "leaf");
+/*
           // vertical/horizontal
           setButtonImage(up_i, j, "leaf"); //initilize the image at the very beginning
           setButtonImage(down_i, j, "leaf");
@@ -587,24 +596,26 @@ function skillButtonClicked(player){
           setButtonImage(up_i, right_j, "leaf");
           setButtonImage(down_i, left_j, "leaf");
           setButtonImage(down_i, right_j, "leaf");
-
+*/
           var playAnimation = setInterval(animation, 100); 
 
           function animation() {
             if(Math.abs(up_i - i) == 4){ //finish
-
+/*
               // vertical/horizontal
-              setButtonImage(up_i, j, "grid");
-              setButtonImage(down_i, j, "grid");
-              setButtonImage(i, left_j, "grid");
-              setButtonImage(i, right_j, "grid");
+              setButtonImage(up_i, j, getButtonImage(up_i, j));
+              setButtonImage(down_i, j, getButtonImage(down_i, j));
+              setButtonImage(i, left_j, getButtonImage(i, left_j));
+              setButtonImage(i, right_j, getButtonImage(i, right_j));
 
               //diagonal
-              setButtonImage(up_i, left_j, "grid");
-              setButtonImage(up_i, right_j, "grid");
-              setButtonImage(down_i, left_j, "grid");
-              setButtonImage(down_i, right_j, "grid");
-
+              setButtonImage(up_i, left_j, getButtonImage(up_i, left_j));
+              setButtonImage(up_i, right_j, getButtonImage(up_i, right_j));
+              setButtonImage(down_i, left_j, getButtonImage(down_i, left_j));
+              setButtonImage(down_i, right_j, getButtonImage(down_i, right_j));
+*/
+              var placeholder = document.getElementById("button_"+ i +"_"+ j);
+              placeholder.pseudoStyle("");  //remove the red layers
               clearInterval(playAnimation); //stop the animation
             }else{
               up_i--;
@@ -612,6 +623,7 @@ function skillButtonClicked(player){
               left_j--;
               right_j++;
 
+/*
               // vertical/horizontal
               if(swapSkillImage(up_i+1, j, up_i, j) == "failed"){ //move the image
                 setButtonImage(up_i+1, j, "grid");  //if failed, which means border is exceeded, set the image to grid(default)
@@ -640,9 +652,9 @@ function skillButtonClicked(player){
               if(swapSkillImage(down_i-1, right_j-1, down_i, right_j) == "failed"){
                 setButtonImage(down_i-1, right_j-1, "grid");
               } 
+*/
 
-
-            }
+            }//end of else
           }//end of animation
           
        
@@ -661,6 +673,12 @@ function skillButtonClicked(player){
   }
 }
 
+function displaySkillHelper(btn, skill){ 
+  if(btn == null) return; 
+  var className = btn.getAttribute('id');  //in this program, the id and class name of a button are the same
+  btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background-image:url('images/" + skill + ".png'); background-size: 65px}");
+
+}
 
 
 
