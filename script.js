@@ -1,8 +1,10 @@
-//i is y-position, j is x-position
-//available monsters: pikachu, bulbasaur, squirtle, charmander
-//right hand side: player 1; left hand side: player 2
-// {monsterName}_flipped means it's player 2
-
+/*
+  - i is y-position, j is x-position
+  - available monsters: pikachu, bulbasaur, squirtle, charmander
+  - right hand side: player 1; left hand side: player 2
+  - {monsterName}_flipped means it's player 2
+  - In the current game version, player 2 is set to be an AI. It will make favorable decisions each turn automatically
+*/
 var isMonsterClicked = false; //determine whether a monster is clicked
 
 
@@ -57,7 +59,7 @@ function createPokemon(playerID, pokemonName){
 
     case "squirtle":
     case "squirtle_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 20};
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 20};
       break;
 
     case "bulbasaur":
@@ -67,7 +69,7 @@ function createPokemon(playerID, pokemonName){
 
     case "charmander":
     case "charmander_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 3, energy: 0, energyCharge: 20};
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 25};
       break;
 
     default:
