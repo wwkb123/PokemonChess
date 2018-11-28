@@ -23,7 +23,7 @@ var currMonster = monster1; //player 1's monster move first
 
 function choosePokemon(){
   setup();
-  document.getElementById("chooseArea").setAttribute("style","display:none");
+  //document.getElementById("chooseArea").setAttribute("style","display:none");
 }
 
 
