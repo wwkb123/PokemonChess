@@ -1,1 +1,1 @@
-# ChessFighter
+# PokemonChess
