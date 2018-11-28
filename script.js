@@ -576,6 +576,7 @@ function skillButtonClicked(player){
           var left_j = j - 1;
           var right_j = j + 1;
 
+          //get vertical/horizontal buttons
           var upButton = document.getElementById("button_"+ up_i +"_"+ j);
           var downButton = document.getElementById("button_"+ down_i +"_"+ j);
           var leftButton = document.getElementById("button_"+ i +"_"+ left_j);
@@ -584,75 +585,57 @@ function skillButtonClicked(player){
           displaySkillHelper(downButton, "leaf");
           displaySkillHelper(leftButton, "leaf");
           displaySkillHelper(rightButton, "leaf");
-/*
-          // vertical/horizontal
-          setButtonImage(up_i, j, "leaf"); //initilize the image at the very beginning
-          setButtonImage(down_i, j, "leaf");
-          setButtonImage(i, left_j, "leaf");
-          setButtonImage(i, right_j, "leaf");
 
-          //diagonal
-          setButtonImage(up_i, left_j, "leaf");
-          setButtonImage(up_i, right_j, "leaf");
-          setButtonImage(down_i, left_j, "leaf");
-          setButtonImage(down_i, right_j, "leaf");
-*/
-          var playAnimation = setInterval(animation, 100); 
+
+          //diagonal buttons
+          var upleftButton = document.getElementById("button_"+ up_i +"_"+ left_j);
+          var uprightButton = document.getElementById("button_"+ up_i +"_"+ right_j);
+          var downleftButton = document.getElementById("button_"+ down_i +"_"+ left_j);
+          var downrightButton = document.getElementById("button_"+ down_i +"_"+ right_j);
+          displaySkillHelper(upleftButton, "leaf");  
+          displaySkillHelper(uprightButton, "leaf");
+          displaySkillHelper(downleftButton, "leaf");
+          displaySkillHelper(downrightButton, "leaf");
+
+
+          var playAnimation = setInterval(animation, 90); 
 
           function animation() {
             if(Math.abs(up_i - i) == 4){ //finish
-/*
-              // vertical/horizontal
-              setButtonImage(up_i, j, getButtonImage(up_i, j));
-              setButtonImage(down_i, j, getButtonImage(down_i, j));
-              setButtonImage(i, left_j, getButtonImage(i, left_j));
-              setButtonImage(i, right_j, getButtonImage(i, right_j));
 
-              //diagonal
-              setButtonImage(up_i, left_j, getButtonImage(up_i, left_j));
-              setButtonImage(up_i, right_j, getButtonImage(up_i, right_j));
-              setButtonImage(down_i, left_j, getButtonImage(down_i, left_j));
-              setButtonImage(down_i, right_j, getButtonImage(down_i, right_j));
-*/
               var placeholder = document.getElementById("button_"+ i +"_"+ j);
-              placeholder.pseudoStyle("");  //remove the red layers
+              placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
+
             }else{
               up_i--;
               down_i++;
               left_j--;
               right_j++;
+              var placeholder = document.getElementById("button_"+ i +"_"+ j);
+              placeholder.pseudoStyle("");  //remove the old image layers
 
-/*
-              // vertical/horizontal
-              if(swapSkillImage(up_i+1, j, up_i, j) == "failed"){ //move the image
-                setButtonImage(up_i+1, j, "grid");  //if failed, which means border is exceeded, set the image to grid(default)
-              }
-              if(swapSkillImage(down_i-1, j, down_i, j) == "failed"){
-                setButtonImage(down_i-1, j, "grid");
-              } 
-              if(swapSkillImage(i, left_j+1, i, left_j) == "failed"){
-                setButtonImage(i, left_j+1, "grid");
-              }
-              if(swapSkillImage(i, right_j-1, i, right_j) == "failed"){
-                setButtonImage(i, right_j-1, "grid");
-              }
+              //get vertical/horizontal buttons
+              upButton = document.getElementById("button_"+ up_i +"_"+ j);
+              downButton = document.getElementById("button_"+ down_i +"_"+ j);
+              leftButton = document.getElementById("button_"+ i +"_"+ left_j);
+              rightButton = document.getElementById("button_"+ i +"_"+ right_j);
+              displaySkillHelper(upButton, "leaf");  //show the skill image layer
+              displaySkillHelper(downButton, "leaf");
+              displaySkillHelper(leftButton, "leaf");
+              displaySkillHelper(rightButton, "leaf");
 
 
-              //diagonal
-              if(swapSkillImage(up_i+1, left_j+1, up_i, left_j) == "failed"){
-                setButtonImage(up_i+1, left_j+1, "grid");
-              } 
-              if(swapSkillImage(up_i+1, right_j-1, up_i, right_j) == "failed"){
-                setButtonImage(up_i+1, right_j-1, "grid");
-              } 
-              if(swapSkillImage(down_i-1, left_j+1, down_i, left_j) == "failed"){
-                setButtonImage(down_i-1, left_j+1, "grid");
-              }
-              if(swapSkillImage(down_i-1, right_j-1, down_i, right_j) == "failed"){
-                setButtonImage(down_i-1, right_j-1, "grid");
-              } 
-*/
+              //diagonal buttons
+              upleftButton = document.getElementById("button_"+ up_i +"_"+ left_j);
+              uprightButton = document.getElementById("button_"+ up_i +"_"+ right_j);
+              downleftButton = document.getElementById("button_"+ down_i +"_"+ left_j);
+              downrightButton = document.getElementById("button_"+ down_i +"_"+ right_j);
+              displaySkillHelper(upleftButton, "leaf");  
+              displaySkillHelper(uprightButton, "leaf");
+              displaySkillHelper(downleftButton, "leaf");
+              displaySkillHelper(downrightButton, "leaf");
+
 
             }//end of else
           }//end of animation
