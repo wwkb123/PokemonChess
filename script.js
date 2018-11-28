@@ -8,13 +8,12 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 
 //to do: let user to pick a pokemon, change stats accordingly
 
-var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0};
-var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
+var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0, energyCharge: 20};
+var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
 
 var currMonster = monster1; //player 1's monster move first
 
-
-
+var turn = 0; //number of turns have been played
 
 
 
@@ -23,13 +22,16 @@ var currMonster = monster1; //player 1's monster move first
 
 function choosePokemon(){
   setup();
-  //document.getElementById("chooseArea").setAttribute("style","display:none");
+  document.getElementById("chooseArea").setAttribute("style","display:none");
 }
 
 
 //determine which pokemon is chosen
 function choose(pokemonName){
   alert(pokemonName + ", I choose you!");
+  switch(pokemonName){
+
+  }
 }
 
 function setup() { //initialize everything
@@ -41,7 +43,8 @@ function setup() { //initialize everything
   setButtonImage(monster2.i, monster2.j, monster2.name);  //top left corner
   initMonsterStats(monster1); //player 1
   initMonsterStats(monster2); //player 2
-  //setStatusText("Monster 1's turn");
+  turn++;
+  setStatusText("Turn " + turn);
   document.getElementById("player1").setAttribute("style","border:3px solid red !important"); //a red frame indicates whose turn
   
 }
@@ -84,7 +87,7 @@ function buttonClicked(i, j) {
       isMonsterClicked = false;
 
       if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
-          setEnergy(currMonster, currMonster.energy+100);
+          setEnergy(currMonster, currMonster.energy+currMonster.energyCharge);
       }
       nextTurn();  //go to the next turn
     }
@@ -108,13 +111,13 @@ function nextTurn(){
     //setStatusText("Monster 1's turn");
   }
 
+  turn++;
+  setStatusText("Turn " + turn);
 }
 
 
 //display the movement and attack range of a monster
 function displayRange(monster){
-  
-
   
   if(!isMonsterClicked){
     //initialize legal and small range of starting i and j, to search for proper grids to display monster's range
@@ -313,7 +316,7 @@ function setHP(monster, newHP){
   }
 
   if(newHP <= 0){
-    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 300); //delay to wait for the animation pass through
+    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 500); //delay to wait for the animation pass through
   }
 }
 
@@ -610,10 +613,12 @@ function displaySkillHelper(btn, skill){
 
     if(currMonster.player != monster1.player && monster1.name == btnImgAlt && monster1.i == btn_i && monster1.j == btn_j){  //monster 1 get hit
       setHP(monster1, monster1.hp - skillDamage(skill));  //deduct hp
+      displayRangeHelper(btn,className);  //display a red layer to make the damage taken clearer
     }
 
     if(currMonster.player != monster2.player && monster2.name == btnImgAlt && monster2.i == btn_i && monster2.j == btn_j){ //monster 2 get hit
       setHP(monster2, monster2.hp - skillDamage(skill));
+      displayRangeHelper(btn,className);
     }
 
   }//end if hit a pokemon
