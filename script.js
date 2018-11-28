@@ -52,29 +52,29 @@ function choose(pokemonName){
 function createPokemon(playerID, pokemonName){
   var newMonster;
     switch(pokemonName){
-    case "pikachu":
-    case "pikachu_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
-      break;
+      case "pikachu":
+      case "pikachu_flipped":
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
+        break;
 
-    case "squirtle":
-    case "squirtle_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 20};
-      break;
+      case "squirtle":
+      case "squirtle_flipped":
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 25};
+        break;
 
-    case "bulbasaur":
-    case "bulbasaur_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:6, atk:2, speed: 2, energy: 0, energyCharge: 20};
-      break;
+      case "bulbasaur":
+      case "bulbasaur_flipped":
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:6, atk:2, speed: 2, energy: 0, energyCharge: 25};
+        break;
 
-    case "charmander":
-    case "charmander_flipped":
-      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 25};
-      break;
+      case "charmander":
+      case "charmander_flipped":
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 20};
+        break;
 
-    default:
-      newMonster = { player:playerID, i:0, j:0, name: "grid", hp:0, atk:0, speed: 0, energy: 0, energyCharge: 0};
-      break;
+      default:
+        newMonster = { player:playerID, i:0, j:0, name: "grid", hp:0, atk:0, speed: 0, energy: 0, energyCharge: 0};
+        break;
   }
 
   return newMonster;
@@ -513,6 +513,14 @@ function skillButtonClicked(player){
 
         //select 4 random columns and hit them with thunders
 
+        /*
+          skill shape:
+          
+          |   | ||
+          |   | ||
+          |   | ||
+
+        */
           var count = 0;
           
 
@@ -656,7 +664,7 @@ function displaySkillHelper(btn, skill){
   var btnImgAlt = getButtonImage(btn_i, btn_j);
   if(isPokemon(btnImgAlt)){  // if the alt of the btn image is a pokemon name, we hit a pokemon
 
-    //check which pokemon get hit, can be mulitple
+    //check which pokemon get hit, can be mulitple, but not currMonster itself
 
     if(currMonster.player != monster1.player && monster1.name == btnImgAlt && monster1.i == btn_i && monster1.j == btn_j){  //monster 1 get hit
       setHP(monster1, monster1.hp - skillDamage(skill));  //deduct hp
@@ -677,19 +685,16 @@ function displaySkillHelper(btn, skill){
 //helper function to return damage of a skill
 function skillDamage(skillName){
   switch(skillName){
+
+    //basic skills damage, can accumulate with attack item buff
     case "leaf":
-      return 2;
-      break;
     case "fire":
-      return 3;
-      break;
     case "bubble":
-      return 2;
-      break;
     case "thunder":
-      return 1;
+      return currMonster.atk;
       break;
-    default:
+
+    default:  //possible animation images that should deal 0 damage
       return 0;
       break;
   }
