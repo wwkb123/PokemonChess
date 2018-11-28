@@ -10,3 +10,7 @@
 	background: white;
 	border: 1px solid;
 }
+
+.game-background{
+	background-image: url("images/background.jpg");
+}

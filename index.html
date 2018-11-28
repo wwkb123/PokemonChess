@@ -5,20 +5,38 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="custom.css">
   <meta charset="utf-8">
-  <title> Chess </title>
+  <title> PokemonChess </title>
   <script src="script.js">  </script>
 </head>
 
 <body onload = "setup();">
   <div id = "head" class="container border border-secondary border-thick">
     <div class="row">
+
+
       <div class="col-sm-6 border border-secondary padding-15" id="player2">
+        <div class="row">
+          <div class="col-sm-8" id="monster_2_stats">
+          </div>
+          <div class="col-sm-4" id="monster_2_img">
+          </div>
+        </div>
       </div>
+
       <div class="col-sm-6 border border-secondary padding-15" id="player1">
+        <div class="row">
+          <div class="col-sm-8" id="monster_1_stats">
+          </div>
+          <div class="col-sm-4" id="monster_1_img">
+          </div>
+        </div>
       </div>
+
+
+
     </div>
   </div>
-  <div id = "grid" class="container bg-dark">
+  <div id = "grid" class="container game-background">
     <!-- This is where the button matrix will be -->
   </div> <!-- end of body -->
 </body>

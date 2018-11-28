@@ -9,7 +9,7 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 //to do: let user to pick a pokemon, change stats accordingly
 
 var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0};
-var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
+var monster2 = { player:2, i:7, j:13, name: "pikachu_flipped", hp:5, atk:1, speed: 4, energy: 0};
 
 var currMonster = monster1; //player 1's monster move first
 
@@ -21,8 +21,8 @@ function setup() { //initialize everything
   //fillFunctionButtons();
   //fillStatusText();
 
-  setButtonImage(7,15,monster1.name);  //bottom right corner
-  setButtonImage(0,0,monster2.name);  //top left corner
+  setButtonImage(monster1.i, monster1.j, monster1.name);  //bottom right corner
+  setButtonImage(monster2.i, monster2.j, monster2.name);  //top left corner
   initMonsterStats(monster1); //player 1
   initMonsterStats(monster2); //player 2
   //setStatusText("Monster 1's turn");
@@ -65,18 +65,18 @@ function createDefaultButton(i, j) {
   //the image part
   var img = document.createElement("img");
   img.id = "img_" + i + "_" + j;
-  img.setAttribute("src", "images/grid.jpg");
+  img.setAttribute("src", "images/grid.png");
   img.setAttribute("alt", "grid");
   img.setAttribute("width", "65");
   img.setAttribute("height", "65");
 
   //the text part
-  var text = document.createElement("label");
-  text.setAttribute("class", "");
-  text.id = "text_" + i + "_" + j;
+  // var text = document.createElement("label");
+  // text.setAttribute("class", "");
+  // text.id = "text_" + i + "_" + j;
 
   button.appendChild(img);
-  button.appendChild(text);
+  //button.appendChild(text);
   return button;
 }
 
@@ -139,7 +139,7 @@ function setButtonImage(i, j, image) {
   if(button == null){
     return;
   }
-  button.setAttribute("src", "images/" + image + ".jpg");
+  button.setAttribute("src", "images/" + image + ".png");
   button.setAttribute("alt", image);
 }
 
@@ -157,15 +157,15 @@ function getButtonImage(i, j) {
 //a function to initialize the stats of two monsters at the beginning of the game
 function initMonsterStats(monster){
 
-  var playerDiv;
+  //find the stats div
+  var playerDiv = document.getElementById("monster_" + monster.player + "_stats"); // e.g. player 1 -> monster_1_stats
 
-  if(monster.player == 1){
-    playerDiv = document.getElementById("player1"); //player 1
-
-  }else if(monster.player == 2){
-    playerDiv = document.getElementById("player2"); //player 2
-  }
-  
+  //monster image
+  var monsterImgDiv = document.getElementById("monster_" + monster.player + "_img");
+  var monsterImg = document.createElement("img");
+  monsterImg.src = 'images/'+ monster.name +'_borderless.jpg';
+  monsterImg.setAttribute("style", "border: 1px solid white");  //hide the border of the image
+  monsterImgDiv.appendChild(monsterImg);
 
   //monster name
   var player_nameDiv = document.createElement("div");
@@ -226,12 +226,12 @@ function initMonsterStats(monster){
 
     //the title
     var energyTitleDiv = document.createElement("div");
-    energyTitleDiv.setAttribute("class","col-sm-2");
+    energyTitleDiv.setAttribute("class","col-sm-3");
     energyTitleDiv.appendChild(document.createTextNode("Energy: "));
 
     //the bar
     var energyBarDiv = document.createElement("div");
-    energyBarDiv.setAttribute("class","col-sm-4 progress");
+    energyBarDiv.setAttribute("class","col-sm-5 progress");
     energyBarDiv.setAttribute("style","height:1.5rem !important; padding:0"); //overwrite the original height and padding
     
     //a green colored bar
@@ -267,6 +267,7 @@ function initMonsterStats(monster){
 }
 
 function setHP(monster, newHP){
+  
   monster['hp'] = newHP;
   var player_hpDiv = document.getElementById("player_" + monster.player + "_hp");
   player_hpDiv.innerHTML = "";
@@ -279,6 +280,9 @@ function setHP(monster, newHP){
     player_hpDiv.appendChild(hp);
   }
 
+  if(newHP <= 0){
+    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 300); //delay to wait for the animation pass through
+  }
 }
 
 function setATK(monster, newATK){
@@ -334,8 +338,8 @@ function swapButton(i1, j1, i2, j2){
     return "failed";
   }
 
-  button1.setAttribute("src", "images/" + newImage + ".jpg");
-  button2.setAttribute("src", "images/" + oldImage + ".jpg");
+  button1.setAttribute("src", "images/" + newImage + ".png");
+  button2.setAttribute("src", "images/" + oldImage + ".png");
 
   button1.setAttribute("alt", newImage);
   button2.setAttribute("alt", oldImage);
@@ -368,9 +372,9 @@ function buttonClicked(i, j) {
     if(inRange(i, j, currMonster)){  //if in valid range
       cleanRangeTag();  //clean all the "range" tags
       swapButton(currMonster.i, currMonster.j, i, j); //update image
-      currMonster['i'] = i;  //update i
+      currMonster['i'] = i;  //update i of currMonster after moving
       currMonster['j'] = j;  //update j
-      var placeholder = document.getElementById("button_"+ i +"_"+ j);
+      var placeholder = document.getElementById("button_"+ i +"_"+ j);  //a placeholder element, created just for calling pseudoStyle("") to clean all red layers
       placeholder.pseudoStyle("");  //remove the red layers
       isMonsterClicked = false;
 
@@ -501,37 +505,6 @@ function cleanRangeTag(){
 }
 
 
-//swap the skill image to make it looks like an animation
-function swapSkillImage(i1, j1, i2, j2){
-  
-  var oldImage = getButtonImage(i1,j1);
-  var newImage = getButtonImage(i2,j2);
-
-  var button1 = document.getElementById("img_" + i1 + "_" + j1);
-  var button2 = document.getElementById("img_" + i2 + "_" + j2);
-
-  if(button1 == null || button2 == null){
-    return "failed";
-  }
-
-  if(isPokemon(newImage)){ // about to hit a pokemon
-    if(monster1.name == newImage && monster1.i == i2 && monster1.j == j2){  //monster 1 get hit
-      setHP(monster1, monster1.hp - 2);
-      return "failed";
-    }else if(monster2.name == newImage && monster2.i == i2 && monster2.j == j2){ //monster 2 get hit
-      setHP(monster2, monster2.hp - 2);
-      return "failed;"
-    }
-  }
-
-  button1.setAttribute("src", "images/" + newImage + ".jpg");
-  button2.setAttribute("src", "images/" + oldImage + ".jpg");
-
-  button1.setAttribute("alt", newImage);
-  button2.setAttribute("alt", oldImage);
-  return "success";
-}
-
 //helper function to determine whether a string is a pokemon name
 function isPokemon(name){
   switch(name){
@@ -556,9 +529,52 @@ function isPokemon(name){
 function skillButtonClicked(player){
   if(currMonster.player == player){  //only curr turn monster can use skill
     if(currMonster.energy == 100){
+
       switch(currMonster.name){
         case "pikachu":
         case "pikachu_flipped":
+
+        //select 4 random columns and hit them with thunders
+
+          var count = 0;
+          
+
+          var randomCols = generateRandomCols(8);
+
+
+          var playAnimation = setInterval(pikachu_animation, 90); 
+
+          function pikachu_animation() {
+            if(count == 10){ //after displaying 10 consecutive grids (8 grid max height + 2 moving image), finish
+
+              var placeholder = document.getElementById("button_"+ 0 +"_"+ 0); //a placeholder element, created just for calling pseudoStyle("") to clean all image layers
+              placeholder.pseudoStyle("");  //remove the image layers
+              clearInterval(playAnimation); //stop the animation
+
+            }else{
+              
+              if(count >= 3){
+                var placeholder = document.getElementById("button_"+ 0 +"_"+ 0);
+                placeholder.pseudoStyle("");  //remove the old image layers
+
+              }
+              
+              //get buttons
+              for(var i = 0; i < randomCols.length; i++){
+                var colButton = document.getElementById("button_"+ count +"_"+ randomCols[i]);
+                displaySkillHelper(colButton, "thunder");  //show the skill image layer
+                if(count >= 3){ // make a thuder with the lenght of 3 grids
+                  var col1Button = document.getElementById("button_"+ (count-1) +"_"+ randomCols[i]);
+                  displaySkillHelper(col1Button, "moving_thunder");  //since the tail of the thunder should deal 0 damage, use moving_thunder to prevent dealing extra damage
+                  var col2Button = document.getElementById("button_"+ (count-2) +"_"+ randomCols[i]);
+                  displaySkillHelper(col2Button, "moving_thunder");
+                }
+              }
+
+              count++;
+
+            }//end of else
+          }//end of animation
           
           break;
 
@@ -569,6 +585,16 @@ function skillButtonClicked(player){
 
         case "bulbasaur":
         case "bulbasaur_flipped":
+
+        /*
+          skill shape:
+
+          \ | /
+          -   -
+          / | \
+  
+        */
+          var count = 0;  
           var i = currMonster.i;
           var up_i = i - 1;
           var down_i = i + 1;
@@ -576,42 +602,17 @@ function skillButtonClicked(player){
           var left_j = j - 1;
           var right_j = j + 1;
 
-          //get vertical/horizontal buttons
-          var upButton = document.getElementById("button_"+ up_i +"_"+ j);
-          var downButton = document.getElementById("button_"+ down_i +"_"+ j);
-          var leftButton = document.getElementById("button_"+ i +"_"+ left_j);
-          var rightButton = document.getElementById("button_"+ i +"_"+ right_j);
-          displaySkillHelper(upButton, "leaf");  //show the skill image layer
-          displaySkillHelper(downButton, "leaf");
-          displaySkillHelper(leftButton, "leaf");
-          displaySkillHelper(rightButton, "leaf");
+          var playAnimation = setInterval(bulbasaur_animation, 90); 
 
-
-          //diagonal buttons
-          var upleftButton = document.getElementById("button_"+ up_i +"_"+ left_j);
-          var uprightButton = document.getElementById("button_"+ up_i +"_"+ right_j);
-          var downleftButton = document.getElementById("button_"+ down_i +"_"+ left_j);
-          var downrightButton = document.getElementById("button_"+ down_i +"_"+ right_j);
-          displaySkillHelper(upleftButton, "leaf");  
-          displaySkillHelper(uprightButton, "leaf");
-          displaySkillHelper(downleftButton, "leaf");
-          displaySkillHelper(downrightButton, "leaf");
-
-
-          var playAnimation = setInterval(animation, 90); 
-
-          function animation() {
-            if(Math.abs(up_i - i) == 4){ //finish
+          function bulbasaur_animation() {
+            if(count == 4){ //after displaying 4 consecutive grids, finish
 
               var placeholder = document.getElementById("button_"+ i +"_"+ j);
               placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
 
             }else{
-              up_i--;
-              down_i++;
-              left_j--;
-              right_j++;
+              
               var placeholder = document.getElementById("button_"+ i +"_"+ j);
               placeholder.pseudoStyle("");  //remove the old image layers
 
@@ -636,7 +637,13 @@ function skillButtonClicked(player){
               displaySkillHelper(downleftButton, "leaf");
               displaySkillHelper(downrightButton, "leaf");
 
+              up_i--;
+              down_i++;
+              left_j--;
+              right_j++;
 
+              count++;
+              
             }//end of else
           }//end of animation
           
@@ -649,18 +656,81 @@ function skillButtonClicked(player){
 
         default:
           break;
-      }
 
-
-      }
+      }// end of switch
+      setEnergy(currMonster, 0); //empty the energy
+    }
   }
 }
 
-function displaySkillHelper(btn, skill){ 
-  if(btn == null) return; 
-  var className = btn.getAttribute('id');  //in this program, the id and class name of a button are the same
-  btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background-image:url('images/" + skill + ".png'); background-size: 65px}");
 
+//a helper function to display the skill animation and calculate the damage taken on monsters
+function displaySkillHelper(btn, skill){ 
+  if(btn == null) return;
+  var className = btn.getAttribute('id');  //in this program, the id and class name of a button are the same
+  var btnSplit = className.split("_");  //  -> [button, i, j]
+  var btn_i = btnSplit[1];
+  var btn_j = btnSplit[2];
+  var btnImgAlt = getButtonImage(btn_i, btn_j);
+  if(isPokemon(btnImgAlt)){  // if the alt of the btn image is a pokemon name, we hit a pokemon
+
+    //check which pokemon get hit, can be mulitple
+
+    if(currMonster.player != monster1.player && monster1.name == btnImgAlt && monster1.i == btn_i && monster1.j == btn_j){  //monster 1 get hit
+      setHP(monster1, monster1.hp - skillDamage(skill));  //deduct hp
+    }
+
+    if(currMonster.player != monster2.player && monster2.name == btnImgAlt && monster2.i == btn_i && monster2.j == btn_j){ //monster 2 get hit
+      setHP(monster2, monster2.hp - skillDamage(skill));
+    }
+
+  }//end if hit a pokemon
+  btn.pseudoStyle(" ."+className+ ":before{  content: ' ' ; z-index: 10; display: block; position: absolute; height: 100%; top: 0; left: 0; right: 0; background-image:url('images/" + skill + ".png'); background-size: 65px; background-repeat: no-repeat;}");
+
+}
+
+function hideSkillHelper(btn){
+  if(btn == null) return;
+
+}
+
+//helper function to return damage of a skill
+function skillDamage(skillName){
+  switch(skillName){
+    case "leaf":
+      return 2;
+      break;
+    case "fire":
+      return 3;
+      break;
+    case "bubble":
+      return 2;
+      break;
+    case "thunder":
+      return 1;
+      break;
+    default:
+      return 0;
+      break;
+  }
+}
+
+//helper function to generate random non-repeating numbers for pikachu's skill
+function generateRandomCols(numberOfCol){
+  var list = [];
+
+  //make numberOfCol columns
+  for(var i = 0; i < numberOfCol; i++){
+    var col = Math.floor(Math.random() * 16);  // pick a random integer from 0 to 15
+
+    while(list.indexOf(col) >= 0){  //if is found in the list, index will be >= 0. else is -1
+      col = Math.floor(Math.random() * 16); // eliminate the case of getting the same column
+    }
+
+    list.push(col);  //push to the list
+  }
+
+  return list;
 }
 
 
