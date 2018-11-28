@@ -8,10 +8,10 @@ var isMonsterClicked = false; //determine whether a monster is clicked
 
 //to do: let user to pick a pokemon, change stats accordingly
 
-var monster1 = { player:1, i:7, j:15, name: "bulbasaur", hp:6, atk:2, speed: 2, energy: 0, energyCharge: 20};
-var monster2 = { player:2, i:0, j:0, name: "pikachu_flipped", hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
+var monster1;
+var monster2;
 
-var currMonster = monster1; //player 1's monster move first
+var currMonster;  //current turn's monster
 
 var turn = 0; //number of turns have been played
 
@@ -20,18 +20,63 @@ var turn = 0; //number of turns have been played
 
 ////////////////========methods written/overwritten by me========////////////////
 
-function choosePokemon(){
-  setup();
-  document.getElementById("chooseArea").setAttribute("style","display:none");
-}
 
 
-//determine which pokemon is chosen
+//determine which pokemon is chosen by Player 1. Pokemon of Player 2 will be selected randomly(Player 2 is AI)
 function choose(pokemonName){
   alert(pokemonName + ", I choose you!");
-  switch(pokemonName){
 
+  monster1 = createPokemon(1, pokemonName.toLowerCase());  //create a pokemon for player 1
+  //player 1 starts at bottom right corner
+  monster1['i'] = 7;
+  monster1['j'] = 15;
+
+  var player2PokemonList = ["pikachu_flipped", "bulbasaur_flipped", "squirtle_flipped", "charmander_flipped"];
+
+  var player2Pokemon = player2PokemonList[Math.floor(Math.random() * 4)];  // choose an index from 0 to 3
+
+  monster2 = createPokemon(2, player2Pokemon);
+  monster2['i'] = 0;
+  monster2['j'] = 0;
+
+
+  currMonster = monster1; //player 1's monster move first
+  setup();
+  document.getElementById("chooseArea").setAttribute("style","display:none");
+
+}
+
+//helper function to return a monster object with proper attributes according to its name
+function createPokemon(playerID, pokemonName){
+  var newMonster;
+    switch(pokemonName){
+    case "pikachu":
+    case "pikachu_flipped":
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
+      break;
+
+    case "squirtle":
+    case "squirtle_flipped":
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 20};
+      break;
+
+    case "bulbasaur":
+    case "bulbasaur_flipped":
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:6, atk:2, speed: 2, energy: 0, energyCharge: 20};
+      break;
+
+    case "charmander":
+    case "charmander_flipped":
+      newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 3, energy: 0, energyCharge: 20};
+      break;
+
+    default:
+      newMonster = { player:playerID, i:0, j:0, name: "grid", hp:0, atk:0, speed: 0, energy: 0, energyCharge: 0};
+      break;
   }
+
+  return newMonster;
+
 }
 
 function setup() { //initialize everything
