@@ -114,6 +114,7 @@ function createProgressBar(bar_id, color, value) {
   bar.id = bar_id;
   bar.className = "progress-bar " + color;
   bar.setAttribute("style", "width: " + value + "%");
+  bar.innerHTML = value/20 + "/5";
   return bar;
 }
 
@@ -135,13 +136,21 @@ function setProgressBar(bar_id, color, value) {
 
 function setButtonImage(i, j, image) {
   var button = document.getElementById("img_" + i + "_" + j);
+  if(button == null){
+    return;
+  }
   button.setAttribute("src", "images/" + image + ".jpg");
   button.setAttribute("alt", image);
 }
 
 function getButtonImage(i, j) {
   var img = document.getElementById("img_" + i + "_" + j);
-  return img.getAttribute("alt");
+  if(img == null){
+    return "grid";  //if i or j exceeds the border
+  }else{
+    return img.getAttribute("alt");
+  }
+  
 }
 
 
@@ -321,11 +330,16 @@ function swapButton(i1, j1, i2, j2){
   var button1 = document.getElementById("img_" + i1 + "_" + j1);
   var button2 = document.getElementById("img_" + i2 + "_" + j2);
 
+  if(button1 == null || button2 == null){
+    return "failed";
+  }
+
   button1.setAttribute("src", "images/" + newImage + ".jpg");
   button2.setAttribute("src", "images/" + oldImage + ".jpg");
 
   button1.setAttribute("alt", newImage);
   button2.setAttribute("alt", oldImage);
+  return "success";
 }
 
 
@@ -361,7 +375,7 @@ function buttonClicked(i, j) {
       isMonsterClicked = false;
 
       if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
-          setEnergy(currMonster, currMonster.energy+20);
+          setEnergy(currMonster, currMonster.energy+100);
       }
 
       if(currMonster == monster1){
@@ -486,9 +500,165 @@ function cleanRangeTag(){
   }
 }
 
+
+//swap the skill image to make it looks like an animation
+function swapSkillImage(i1, j1, i2, j2){
+  
+  var oldImage = getButtonImage(i1,j1);
+  var newImage = getButtonImage(i2,j2);
+
+  var button1 = document.getElementById("img_" + i1 + "_" + j1);
+  var button2 = document.getElementById("img_" + i2 + "_" + j2);
+
+  if(button1 == null || button2 == null){
+    return "failed";
+  }
+
+  if(isPokemon(newImage)){ // about to hit a pokemon
+    if(monster1.name == newImage && monster1.i == i2 && monster1.j == j2){  //monster 1 get hit
+      setHP(monster1, monster1.hp - 2);
+      return "failed";
+    }else if(monster2.name == newImage && monster2.i == i2 && monster2.j == j2){ //monster 2 get hit
+      setHP(monster2, monster2.hp - 2);
+      return "failed;"
+    }
+  }
+
+  button1.setAttribute("src", "images/" + newImage + ".jpg");
+  button2.setAttribute("src", "images/" + oldImage + ".jpg");
+
+  button1.setAttribute("alt", newImage);
+  button2.setAttribute("alt", oldImage);
+  return "success";
+}
+
+//helper function to determine whether a string is a pokemon name
+function isPokemon(name){
+  switch(name){
+    case "pikachu":
+    case "pikachu_flipped":
+    case "squirtle":
+    case "squirtle_flipped":
+    case "bulbasaur":
+    case "bulbasaur_flipped":
+    case "charmander":
+    case "charmander_flipped":
+      return true;
+      break;
+
+    default:
+      return false;
+      break;
+    }
+}
+
 //take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
 function skillButtonClicked(player){
+  if(currMonster.player == player){  //only curr turn monster can use skill
+    if(currMonster.energy == 100){
+      switch(currMonster.name){
+        case "pikachu":
+        case "pikachu_flipped":
+          
+          break;
 
+        case "squirtle":
+        case "squirtle_flipped":
+
+          break;
+
+        case "bulbasaur":
+        case "bulbasaur_flipped":
+          var i = currMonster.i;
+          var up_i = i - 1;
+          var down_i = i + 1;
+          var j = currMonster.j;
+          var left_j = j - 1;
+          var right_j = j + 1;
+
+          // vertical/horizontal
+          setButtonImage(up_i, j, "leaf"); //initilize the image at the very beginning
+          setButtonImage(down_i, j, "leaf");
+          setButtonImage(i, left_j, "leaf");
+          setButtonImage(i, right_j, "leaf");
+
+          //diagonal
+          setButtonImage(up_i, left_j, "leaf");
+          setButtonImage(up_i, right_j, "leaf");
+          setButtonImage(down_i, left_j, "leaf");
+          setButtonImage(down_i, right_j, "leaf");
+
+          var playAnimation = setInterval(animation, 100); 
+
+          function animation() {
+            if(Math.abs(up_i - i) == 4){ //finish
+
+              // vertical/horizontal
+              setButtonImage(up_i, j, "grid");
+              setButtonImage(down_i, j, "grid");
+              setButtonImage(i, left_j, "grid");
+              setButtonImage(i, right_j, "grid");
+
+              //diagonal
+              setButtonImage(up_i, left_j, "grid");
+              setButtonImage(up_i, right_j, "grid");
+              setButtonImage(down_i, left_j, "grid");
+              setButtonImage(down_i, right_j, "grid");
+
+              clearInterval(playAnimation); //stop the animation
+            }else{
+              up_i--;
+              down_i++;
+              left_j--;
+              right_j++;
+
+              // vertical/horizontal
+              if(swapSkillImage(up_i+1, j, up_i, j) == "failed"){ //move the image
+                setButtonImage(up_i+1, j, "grid");  //if failed, which means border is exceeded, set the image to grid(default)
+              }
+              if(swapSkillImage(down_i-1, j, down_i, j) == "failed"){
+                setButtonImage(down_i-1, j, "grid");
+              } 
+              if(swapSkillImage(i, left_j+1, i, left_j) == "failed"){
+                setButtonImage(i, left_j+1, "grid");
+              }
+              if(swapSkillImage(i, right_j-1, i, right_j) == "failed"){
+                setButtonImage(i, right_j-1, "grid");
+              }
+
+
+              //diagonal
+              if(swapSkillImage(up_i+1, left_j+1, up_i, left_j) == "failed"){
+                setButtonImage(up_i+1, left_j+1, "grid");
+              } 
+              if(swapSkillImage(up_i+1, right_j-1, up_i, right_j) == "failed"){
+                setButtonImage(up_i+1, right_j-1, "grid");
+              } 
+              if(swapSkillImage(down_i-1, left_j+1, down_i, left_j) == "failed"){
+                setButtonImage(down_i-1, left_j+1, "grid");
+              }
+              if(swapSkillImage(down_i-1, right_j-1, down_i, right_j) == "failed"){
+                setButtonImage(down_i-1, right_j-1, "grid");
+              } 
+
+
+            }
+          }//end of animation
+          
+       
+          break;
+
+        case "charmander":
+        case "charmander_flipped":
+          break;
+
+        default:
+          break;
+      }
+
+
+      }
+  }
 }
 
 
