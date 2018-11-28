@@ -9,7 +9,7 @@
   <script src="script.js">  </script>
 </head>
 
-<body onload = "setup();">
+<body onload = "choosePokemon();">
   <div id = "head" class="container border border-secondary border-thick">
     <div class="row">
 
@@ -36,8 +36,49 @@
 
     </div>
   </div>
+
+  <!-- status text bar -->
+  <p class="text-center h1" id="status">
+      Player 1 choose a Pokemon!
+  </p>
+  <!-- end -->
+
+
+  <!-- pokemon selecting area -->
+  <div id = "choose"" class="container">
+    
+    <div class="row">
+      <div class="col-sm-6" onclick="choose('pikachu')">
+        <img src="images/pikachu_borderless.jpg">
+        <b>Pikachu</b>
+      </div>
+      <div class="col-sm-6" onclick="choose('bulbasaur')">
+        <img src="images/bulbasaur_borderless.jpg">
+        <b>Bulbasaur</b>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6" onclick="choose('charmander')">
+        <img src="images/charmander_borderless.jpg">
+        <b>Charmander</b>
+      </div>
+      <div class="col-sm-6" onclick="choose('squirtle')">
+        <img src="images/squirtle_borderless.jpg">
+        <b>Squirtle</b>
+      </div>
+    </div>
+  </div>
+  <!-- end -->
+
+
+
+  <!-- battlefield -->
   <div id = "grid" class="container game-background">
     <!-- This is where the button matrix will be -->
-  </div> <!-- end of body -->
-</body>
+  </div>
+  <!-- end -->
+
+
+</body> <!-- end of body -->
 </html>

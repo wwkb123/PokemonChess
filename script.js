@@ -16,6 +16,21 @@ var currMonster = monster1; //player 1's monster move first
 
 
 
+
+
+
+////////////////========methods written/overwritten by me========////////////////
+
+function choosePokemon(){
+  setup();
+}
+
+
+//determine which pokemon is chosen
+function choose(pokemonName){
+  alert(pokemonName + ", I choose you!");
+}
+
 function setup() { //initialize everything
   fillMatrix();
   //fillFunctionButtons();
@@ -30,109 +45,12 @@ function setup() { //initialize everything
   
 }
 
-////////////////methods written by Professor Liu////////////////
-function fillMatrix() {
-  var matrix = document.getElementById("grid");
-  for (var i = 0; i < 8; i++) {
-    var newRow = createRow("justify-content-md-center");
-    for (var j = 0; j < 16; j++) {
-      newRow.appendChild(createDefaultButton(i, j));
-    }
-    matrix.appendChild(newRow);
-  }
-}
-
-
-function fillFunctionButtons() {
-  var headDiv = document.getElementById("head");
-  var funcBtnRow = createRow();
-  // createButton(buttonText, styleClass, functionName);
-  //funcBtnRow.appendChild(createButton("All Mid All Random", "btn btn-primary btn-sm m-3", "f1()"));
-  //funcBtnRow.appendChild(createButton("Drop the beat", "btn btn-warning btn-sm m-3", "f2()"));
-  //funcBtnRow.appendChild(createButton("Defile", "btn btn-dark btn-sm m-3", "f3()"));
-  //funcBtnRow.appendChild(createButton("Puuurrrge!", "btn btn-light m-3", "f4()"));
-  headDiv.appendChild(funcBtnRow);
-}
-
-function createDefaultButton(i, j) {
-  var button = document.createElement("div");
-  button.className = "button_" + i + "_" + j;
-  button.id = "button_" + i + "_" + j;
-  button.setAttribute("onclick", "buttonClicked("+i+","+j+")");
-  button.setAttribute("style","position: relative");
-  
-
-  //the image part
-  var img = document.createElement("img");
-  img.id = "img_" + i + "_" + j;
-  img.setAttribute("src", "images/grid.png");
-  img.setAttribute("alt", "grid");
-  img.setAttribute("width", "65");
-  img.setAttribute("height", "65");
-
-  //the text part
-  // var text = document.createElement("label");
-  // text.setAttribute("class", "");
-  // text.id = "text_" + i + "_" + j;
-
-  button.appendChild(img);
-  //button.appendChild(text);
-  return button;
-}
-
-function fillStatusText() {
-  var headDiv = document.getElementById("head");
-  var infoTextRow = createRow("ml-12");
-  infoTextRow.id = "infoText"; //set id of this element so we can change it later
-  headDiv.appendChild(infoTextRow);
-}
-
 function setStatusText(text) {
-  var textDiv = document.getElementById("infoText");
-  var newText = document.createElement("div");
-  newText.className = "text-center";
-  newText.appendChild(document.createTextNode(text));
-  textDiv.innerHTML = "";
-  textDiv.appendChild(newText);
+  var statusText = document.getElementById("status");
+  statusText.innerHTML = text;
 }
 
 
-// helper functions below
-
-function createRow(className) {
-  var rowDiv = document.createElement("div");
-  if (className == null) {
-    rowDiv.className = "row";
-  } else {
-    rowDiv.className = "row " + className;
-  }
-  return rowDiv;
-}
-
-function createProgressBar(bar_id, color, value) {
-  var bar = document.createElement("div");
-  bar.id = bar_id;
-  bar.className = "progress-bar " + color;
-  bar.setAttribute("style", "width: " + value + "%");
-  bar.innerHTML = value/20 + "/5";
-  return bar;
-}
-
-function setProgressBar(bar_id, color, value) {
-  var bar = document.getElementById(bar_id);
-  bar.className = "progress-bar " + color;
-  bar.setAttribute("style", "width: " + value + "%");
-  bar.innerHTML = value/20 + "/5";
-}
-
-
-////////////////end of methods written by Professor Liu////////////////
-
-
-
-
-
-////////////////========methods written/overwritten by me========////////////////
 
 function setButtonImage(i, j, image) {
   var button = document.getElementById("img_" + i + "_" + j);
@@ -736,3 +654,98 @@ function generateRandomCols(numberOfCol){
 
 
 ////////////////========end of methods written/overwritten by me========////////////////
+
+
+
+
+
+
+
+
+
+
+
+////////////////methods written by Professor Liu////////////////
+function fillMatrix() {
+  var matrix = document.getElementById("grid");
+  for (var i = 0; i < 8; i++) {
+    var newRow = createRow("justify-content-md-center");
+    for (var j = 0; j < 16; j++) {
+      newRow.appendChild(createDefaultButton(i, j));
+    }
+    matrix.appendChild(newRow);
+  }
+}
+
+
+function fillFunctionButtons() {
+  var headDiv = document.getElementById("head");
+  var funcBtnRow = createRow();
+  // createButton(buttonText, styleClass, functionName);
+  //funcBtnRow.appendChild(createButton("All Mid All Random", "btn btn-primary btn-sm m-3", "f1()"));
+  //funcBtnRow.appendChild(createButton("Drop the beat", "btn btn-warning btn-sm m-3", "f2()"));
+  //funcBtnRow.appendChild(createButton("Defile", "btn btn-dark btn-sm m-3", "f3()"));
+  //funcBtnRow.appendChild(createButton("Puuurrrge!", "btn btn-light m-3", "f4()"));
+  headDiv.appendChild(funcBtnRow);
+}
+
+function createDefaultButton(i, j) {
+  var button = document.createElement("div");
+  button.className = "button_" + i + "_" + j;
+  button.id = "button_" + i + "_" + j;
+  button.setAttribute("onclick", "buttonClicked("+i+","+j+")");
+  button.setAttribute("style","position: relative");
+  
+
+  //the image part
+  var img = document.createElement("img");
+  img.id = "img_" + i + "_" + j;
+  img.setAttribute("src", "images/grid.png");
+  img.setAttribute("alt", "grid");
+  img.setAttribute("width", "65");
+  img.setAttribute("height", "65");
+
+  //the text part
+  // var text = document.createElement("label");
+  // text.setAttribute("class", "");
+  // text.id = "text_" + i + "_" + j;
+
+  button.appendChild(img);
+  //button.appendChild(text);
+  return button;
+}
+
+
+
+
+// helper functions below
+
+function createRow(className) {
+  var rowDiv = document.createElement("div");
+  if (className == null) {
+    rowDiv.className = "row";
+  } else {
+    rowDiv.className = "row " + className;
+  }
+  return rowDiv;
+}
+
+function createProgressBar(bar_id, color, value) {
+  var bar = document.createElement("div");
+  bar.id = bar_id;
+  bar.className = "progress-bar " + color;
+  bar.setAttribute("style", "width: " + value + "%");
+  bar.innerHTML = value/20 + "/5";
+  return bar;
+}
+
+function setProgressBar(bar_id, color, value) {
+  var bar = document.getElementById(bar_id);
+  bar.className = "progress-bar " + color;
+  bar.setAttribute("style", "width: " + value + "%");
+  bar.innerHTML = value/20 + "/5";
+}
+
+
+////////////////end of methods written by Professor Liu////////////////
+
