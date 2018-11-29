@@ -69,7 +69,7 @@ function createPokemon(playerID, pokemonName){
 
       case "charmander":
       case "charmander_flipped":
-        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 20};
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 100};
         break;
 
       default:
@@ -515,7 +515,7 @@ function skillButtonClicked(player){
 
         /*
           skill shape:
-          
+
           |   | ||
           |   | ||
           |   | ||
@@ -638,6 +638,98 @@ function skillButtonClicked(player){
 
         case "charmander":
         case "charmander_flipped":
+          var count = 0;  
+          var i = currMonster.i;
+          var up_i = i - 1;
+          var down_i = i + 1;
+          var j = currMonster.j;
+          var left_j = j - 1;
+          var right_j = j + 1;
+
+          upButton = document.getElementById("button_"+ up_i +"_"+ j);
+          downButton = document.getElementById("button_"+ down_i +"_"+ j);
+          displaySkillHelper(upButton, "fire");  //show the skill image layer
+          displaySkillHelper(downButton, "fire");
+
+          //inner helper function to help displaying the fire animation
+          function fireDisplayHelper(i, j, direction){
+            var innerConut = 0; //tail of the fire image to be displayed
+            while(innerConut < 5){ //display 4 more fire at the tail
+              var buttonTail;
+              if(direction == "left"){
+                buttonTail = document.getElementById("button_"+ i +"_"+ (j + innerConut));
+              }else if(direction == "right"){
+                buttonTail = document.getElementById("button_"+ i +"_"+ (j - innerConut)); 
+              }
+              
+              displaySkillHelper(buttonTail, "moving_fire");
+              innerConut++;
+            }
+          }
+
+          var playAnimation = setInterval(charmander_animation, 60); 
+
+          function charmander_animation() {
+            if(count == Math.max(15 - currMonster.j, currMonster.j - 1) + 5){ //after displaying maximum possible fire images, end the animation
+
+              var placeholder = document.getElementById("button_"+ i +"_"+ j);
+              placeholder.pseudoStyle("");  //remove the image layers
+              clearInterval(playAnimation); //stop the animation
+
+            }else{
+              
+              if(count >= 5){
+                var placeholder = document.getElementById("button_"+ i +"_"+ j);
+                placeholder.pseudoStyle("");  //remove the old image layers
+              }
+              
+
+
+              //get left hand side buttons
+              leftButton = document.getElementById("button_"+ i +"_"+ left_j);
+              displaySkillHelper(leftButton, "fire");
+
+              upleftButton = document.getElementById("button_"+ up_i +"_"+ left_j);
+              displaySkillHelper(upleftButton, "fire");
+
+
+              downleftButton = document.getElementById("button_"+ down_i +"_"+ left_j);
+              displaySkillHelper(downleftButton, "fire");
+
+              
+
+              //get right hand side buttons
+              rightButton = document.getElementById("button_"+ i +"_"+ right_j);
+              displaySkillHelper(rightButton, "fire");
+
+              uprightButton = document.getElementById("button_"+ up_i +"_"+ right_j);
+              displaySkillHelper(uprightButton, "fire");
+              
+              downrightButton = document.getElementById("button_"+ down_i +"_"+ right_j);
+              displaySkillHelper(downrightButton, "fire");
+
+
+              //display the fire tail animation
+              if(count >= 5){
+                fireDisplayHelper(i, left_j, "left");
+                fireDisplayHelper(up_i, left_j, "left");
+                fireDisplayHelper(down_i, left_j, "left");
+
+                fireDisplayHelper(i, right_j, "right");
+                fireDisplayHelper(up_i, right_j, "right");
+                fireDisplayHelper(down_i, right_j, "right");
+              }
+
+
+              left_j--;
+              right_j++;
+
+              count++;
+              
+            }//end of else
+          }//end of animation
+       
+
           break;
 
         default:
@@ -647,7 +739,7 @@ function skillButtonClicked(player){
       setEnergy(currMonster, 0); //empty the energy
       setTimeout(function(){
         nextTurn(); //wait until the animation thread is read, go to the next turn
-      }, 1000); //delay to wait for the animation pass through
+      }, 1500); //delay to wait for the animation pass through
       
     }
   }
