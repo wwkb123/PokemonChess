@@ -59,7 +59,7 @@ function createPokemon(playerID, pokemonName){
 
       case "squirtle":
       case "squirtle_flipped":
-        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 25};
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 100 /*25*/};
         break;
 
       case "bulbasaur":
@@ -69,7 +69,7 @@ function createPokemon(playerID, pokemonName){
 
       case "charmander":
       case "charmander_flipped":
-        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 100};
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:3, speed: 2, energy: 0, energyCharge: 20};
         break;
 
       default:
@@ -566,6 +566,47 @@ function skillButtonClicked(player){
 
         case "squirtle":
         case "squirtle_flipped":
+          var count = 1; 
+
+          var curr_i = currMonster.i;
+          var curr_j = currMonster.j;
+
+          
+
+          var playAnimation = setInterval(squirtle_animation, 150);
+          function squirtle_animation() {
+            if(count == 3){ //after displaying 2 consecutive grids, finish
+
+              var placeholder = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+              placeholder.pseudoStyle("");  //remove the image layers
+              clearInterval(playAnimation); //stop the animation
+
+            }else{
+              
+              var placeholder = document.getElementById("button_"+ curr_i +"_"+ curr_j);
+              placeholder.pseudoStyle("");  //remove the old image layers
+
+              var upleft_i = curr_i - count;
+          	  var upleft_j = curr_j - count;
+
+          	  var downright_i = curr_i + count;
+          	  var downright_j = curr_j + count;
+
+              for(var i = upleft_i; i <= downright_i; i++){
+          		for(var j = upleft_j; j <= downright_j; j++){
+          		  if(i == curr_i && j == curr_j) continue; //display bubble images except the monster position itself
+          		  var currButton = document.getElementById("button_"+ i +"_"+ j);
+          		  displaySkillHelper(currButton, "bubble");
+          		}
+          	  }
+
+              count++;
+              
+            }//end of else
+          }//end of animation
+          
+          
+
 
           break;
 
@@ -581,9 +622,11 @@ function skillButtonClicked(player){
   
         */
           var count = 0;  
+
           var i = currMonster.i;
           var up_i = i - 1;
           var down_i = i + 1;
+
           var j = currMonster.j;
           var left_j = j - 1;
           var right_j = j + 1;
@@ -638,6 +681,15 @@ function skillButtonClicked(player){
 
         case "charmander":
         case "charmander_flipped":
+          /*
+          skill shape:
+
+          - - - - - - - - - - -
+          - - - - - - - - - - -
+          - - - - - - - - - - -
+  
+          */
+
           var count = 0;  
           var i = currMonster.i;
           var up_i = i - 1;
