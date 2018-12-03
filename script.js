@@ -566,6 +566,18 @@ function skillButtonClicked(player){
 
         case "squirtle":
         case "squirtle_flipped":
+
+
+        /*
+          skill shape:
+
+			O O O O O
+	        O O O O O
+	        O O   O O
+	        O O O O O
+	        O O O O O
+
+        */
           var count = 1; 
 
           var curr_i = currMonster.i;
@@ -573,7 +585,8 @@ function skillButtonClicked(player){
 
           
 
-          var playAnimation = setInterval(squirtle_animation, 150);
+          var playAnimation = setInterval(squirtle_animation, 120);
+
           function squirtle_animation() {
             if(count == 3){ //after displaying 2 consecutive grids, finish
 
@@ -595,6 +608,14 @@ function skillButtonClicked(player){
               for(var i = upleft_i; i <= downright_i; i++){
           		for(var j = upleft_j; j <= downright_j; j++){
           		  if(i == curr_i && j == curr_j) continue; //display bubble images except the monster position itself
+          		  
+          		  if(count == 2){  //skip the inner bubble circle when the outer circle appears
+          		  	var distance = Math.abs(i - curr_i) + Math.abs(j - curr_j); //distance on the grid system
+          		  	if(distance <= 1 || Math.abs(i - curr_i) == 1 && Math.abs(j - curr_j) == 1 /* diagonals */){
+          		  	  continue;
+          		  	}
+          		  }
+
           		  var currButton = document.getElementById("button_"+ i +"_"+ j);
           		  displaySkillHelper(currButton, "bubble");
           		}
@@ -812,7 +833,7 @@ function displaySkillHelper(btn, skill){
 
     if(currMonster.player != monster1.player && monster1.name == btnImgAlt && monster1.i == btn_i && monster1.j == btn_j){  //monster 1 get hit
       setHP(monster1, monster1.hp - skillDamage(skill));  //deduct hp
-      displayRangeHelper(btn,className);  //display a red layer to make the damage taken clearer
+      displayRangeHelper(btn,className);  //display a red layer on the enemy image to make the damage taken clearer
     }
 
     if(currMonster.player != monster2.player && monster2.name == btnImgAlt && monster2.i == btn_i && monster2.j == btn_j){ //monster 2 get hit
