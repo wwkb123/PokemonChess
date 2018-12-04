@@ -66,12 +66,12 @@ function createPokemon(playerID, pokemonName){
     switch(pokemonName){
       case "pikachu":
       case "pikachu_flipped":
-        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:1, speed: 3, energy: 0, energyCharge: 50};
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:4, atk:1, speed: 3, energy: 0, energyCharge: 50};
         break;
 
       case "squirtle":
       case "squirtle_flipped":
-        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 100 /*25*/};
+        newMonster = { player:playerID, i:0, j:0, name: pokemonName, hp:5, atk:2, speed: 3, energy: 0, energyCharge: 25};
         break;
 
       case "bulbasaur":
@@ -91,6 +91,11 @@ function createPokemon(playerID, pokemonName){
 
   return newMonster;
 
+}
+
+//helper funciton to hide the hint message
+function hideHint(){
+	document.getElementById("hint").innerHTML = "";
 }
 
 function setup() { //initialize everything
@@ -202,12 +207,12 @@ function nextTurn(){
   turn++;
   var messageBar = document.getElementById("message");
 
-  if(turn % 4 == 0){  //spawn new item
+  if(turn % 5 == 0){  //spawn new item every 5 turns
   	spawnItem();
   }
 
   setStatusText("Turn " + turn);
-  messageBar.innerHTML = "Next item appears in " + (4 - (turn % 4)) + " turn(s).";
+  messageBar.innerHTML = "Next item appears in " + (5 - (turn % 5)) + " turn(s).";
   
  }
 
@@ -569,14 +574,14 @@ function skillButtonClicked(player){
         case "pikachu":
         case "pikachu_flipped":
 
-        //select 4 random columns and hit them with thunders
+        //select 8 random columns and hit them with thunders
 
         /*
           skill shape:
 
-          |   | ||
-          |   | ||
-          |   | ||
+          |   | || |   | ||
+          |   | || |   | ||
+          |   | || |   | ||
 
         */
           var count = 0;
@@ -971,6 +976,9 @@ function isItem(imageName){
 			return false;
 	}
 }
+
+
+
 
 
 

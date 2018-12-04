@@ -38,13 +38,15 @@
   </div>
 
   <!-- status text bar -->
-  <p class="text-center h1" id="status">
+  <p class="text-center h2" id="status" style="margin: 0px">
       Player 1 choose a Pokemon!
   </p>
-  <p class="text-center h5" id="message">
+  <p class="text-center" id="message" style="font-size: 20px; margin: 0px">
       <!-- reserved for game message -->
       Welcome to PokemonChess!
   </p>
+
+
   <!-- end -->
 
 
@@ -52,33 +54,82 @@
   <div id = "chooseArea" class="container">
     
     <div class="row">
+
+
       <div class="col-sm-6 border border-secondary" onclick="choose('Pikachu')">
         <div class="row">
           <div class="col-sm-3">
             <img src="images/pikachu_borderless.jpg">
           </div>
+
           <div class="col-sm-9">
-            <b>Pikachu</b>
+            <b>Pikachu <i>(Speed)</i> </b> <br>
+            HP: 4<br>
+            Attack: 1<br>
+            Speed: 3<br>
+            Skills: 2 turns <br>
           </div>
         </div>
-        
-      </div>
+      </div> <!-- end of pikachu column-->
+
+
       <div class="col-sm-6 border border-secondary" onclick="choose('Bulbasaur')">
-        <img src="images/bulbasaur_borderless.jpg">
-        <b>Bulbasaur</b>
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <img src="images/bulbasaur_borderless.jpg">
+          </div>
+
+          <div class="col-sm-9">
+            <b>Bulbasaur <i>(Defense)</i></b> <br>
+            HP: 6<br>
+            Attack: 2<br>
+            Speed: 2<br>
+            Skills: 4 turns <br>
+          </div>
+        </div>
+      </div> <!-- end of bulbasaur column-->
+
+
+    </div> <!--  end of first row  -->
 
     <div class="row">
+
+
       <div class="col-sm-6 border border-secondary" onclick="choose('Charmander')">
-        <img src="images/charmander_borderless.jpg">
-        <b>Charmander</b>
-      </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <img src="images/charmander_borderless.jpg">
+          </div>
+
+          <div class="col-sm-9">
+            <b>Charmander <i>(Attack)</i></b> <br>
+            HP: 5<br>
+            Attack: 3<br>
+            Speed: 2<br>
+            Skills: 5 turns <br>
+          </div>
+        </div>
+      </div> <!-- end of charmander column-->
+
+
       <div class="col-sm-6 border border-secondary" onclick="choose('Squirtle')">
-        <img src="images/squirtle_borderless.jpg">
-        <b>Squirtle</b>
-      </div>
-    </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <img src="images/squirtle_borderless.jpg">
+          </div>
+
+          <div class="col-sm-9">
+            <b>Squirtle <i>(Average)</i></b> <br>
+            HP: 5<br>
+            Attack: 2<br>
+            Speed: 3<br>
+            Skills: 4 turns <br>
+          </div>
+        </div>
+      </div> <!-- end of squirtle column-->
+
+
+    </div> <!-- end of second row -->
   </div>
   <!-- end -->
 
@@ -90,6 +141,11 @@
   </div>
   <!-- end -->
 
+  <!-- hint message -->
+  <p class="text-center" id="hint" style="font-size: 12px; margin: 0px">
+      <!-- reserved for game message -->
+      Make your browser fullscreen to have better game experience <a href="#" onclick="hideHint();">[OK]</a>
+  </p>
 
 </body> <!-- end of body -->
 </html>
