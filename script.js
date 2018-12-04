@@ -112,6 +112,7 @@ function setup() { //initialize everything
   document.getElementById("player1").setAttribute("style","border:3px solid red !important"); //a red frame indicates whose turn
   
   spawnItem();
+
 }
 
 function setStatusText(text) {
@@ -179,7 +180,7 @@ function buttonClicked(i, j) {
       placeholder.pseudoStyle("");  //remove the red layers
       isMonsterClicked = false;
 
-      if(currMonster.energy < 100){  //if energy is not full, + 20% each turn
+      if(currMonster.energy < 100){  //if energy is not full, + energyCharge% each turn
           setEnergy(currMonster, currMonster.energy+currMonster.energyCharge);
       }
       nextTurn();  //go to the next turn
@@ -190,18 +191,21 @@ function buttonClicked(i, j) {
 
 //helper function to go to the next turn
 function nextTurn(){
-  if(currMonster == monster1){
+  if(currMonster == monster1){  //player 1's turn finished, transits to player 2's turn
     //move the red frame to another player
     document.getElementById("player1").removeAttribute("style");
     document.getElementById("player2").setAttribute("style","border:3px solid red !important");
           
     currMonster = monster2;
-    //setStatusText("Monster 2's turn");
-  }else{ //monster2
+    AI_move();  //AI starts making decisions
+  
+  }else{ //player 2's turn transits to player 1's turn
+
+    
     document.getElementById("player2").removeAttribute("style");
     document.getElementById("player1").setAttribute("style","border:3px solid red !important");
     currMonster = monster1;
-    //setStatusText("Monster 1's turn");
+    
   }
 
   turn++;
@@ -611,7 +615,7 @@ function skillButtonClicked(player){
               for(var i = 0; i < randomCols.length; i++){
                 var colButton = document.getElementById("button_"+ count +"_"+ randomCols[i]);
                 displaySkillHelper(colButton, "thunder");  //show the skill image layer
-                if(count >= 3){ // make a thuder with the lenght of 3 grids
+                if(count >= 3){ // make a thuder with the length of 3 grids
                   var col1Button = document.getElementById("button_"+ (count-1) +"_"+ randomCols[i]);
                   displaySkillHelper(col1Button, "moving_thunder");  //since the tail of the thunder should deal 0 damage, use moving_thunder to prevent dealing extra damage
                   var col2Button = document.getElementById("button_"+ (count-2) +"_"+ randomCols[i]);
@@ -634,7 +638,7 @@ function skillButtonClicked(player){
         /*
           skill shape:
 
-			O O O O O
+			    O O O O O
 	        O O O O O
 	        O O   O O
 	        O O O O O
@@ -975,6 +979,134 @@ function isItem(imageName){
 		default:
 			return false;
 	}
+}
+
+
+function getRange(){
+  var rangeArr = [];
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 16; j++) {
+      var currButton = document.getElementById("button_" + i + "_" + j);
+      if(currButton.getAttribute("alt") == "range"){
+        rangeArr.push(i + "_" +j);  // push a i_j pair, to be split("_") later
+      }
+    }
+  }
+
+  return rangeArr;
+}
+
+
+//determine whether the victim is in attacker's skill range
+function isInSkillRange(attacker, victim){
+
+  switch(attacker.name){
+    case "pikachu_flipped":
+      return true;  //pikachu's skill is in random range, will be casted regardless of the range
+      break;
+
+    case "squirtle_flipped":
+      var upleft_i = (parseInt(attacker.i) - 2);
+      var upleft_j = (parseInt(attacker.j) - 2);
+
+      var downright_i = (parseInt(attacker.i) + 2);
+      var downright_j = (parseInt(attacker.j) + 2);
+
+
+      for(var i = upleft_i; i <= downright_i; i++){
+        for(var j = upleft_j; j <= downright_j; j++){
+          if(i == victim.i && j == victim.j){  //if the victim is in skill range
+            return true;
+          }
+        }
+      }
+
+      return false;
+      break;
+
+    case "bulbasaur_flipped":
+      break;
+
+    case "charmander_flipped":
+      break;
+
+    default:
+      return false;
+      break;
+  }
+
+}
+
+
+function AI_move(){
+  var rangeArr;
+  var skillIsCasted = false;
+
+  setTimeout(function(){
+    buttonClicked(currMonster.i, currMonster.j); //display the red layers
+    rangeArr = getRange();  //get all elements with "range" tag
+  }, 600);
+
+  
+  setTimeout(function(){
+    //make decisions
+    if(currMonster.hp > 2.5){
+      /*
+
+        if have enough hp -> attack mode: 
+        look for attack chances > 
+        look for attack items > 
+        look for speed items > 
+        move toward enemy 
+
+      */
+
+      //check whether skill can be casted
+      if(isInSkillRange(currMonster, monster1)){
+        if(currMonster.energy >= 100){  //if have enough energy
+          skillButtonClicked(currMonster.player);
+          skillIsCasted = true;  // the skill is casted
+        }else{ //move if don't have enough energy
+          var index = Math.floor(Math.random() * rangeArr.length);
+          var curr_i = rangeArr[index].split("_")[0];
+          var curr_j = rangeArr[index].split("_")[1];
+          if(!isPokemon(getButtonImage(curr_i, curr_j))){  //move only if that grid is not a pokemon
+            buttonClicked(curr_i, curr_j);
+          }else{
+
+          }
+        }
+      }
+
+      if(!skillIsCasted){ // if skill hasn't been casted, move
+        var index = Math.floor(Math.random() * rangeArr.length);
+        var curr_i = rangeArr[index].split("_")[0];
+        var curr_j = rangeArr[index].split("_")[1];
+        if(!isPokemon(getButtonImage(curr_i, curr_j))){  //move only if that grid is not a pokemon
+          buttonClicked(curr_i, curr_j);
+        }else{
+
+        }
+        
+      }
+
+      
+      
+      
+
+
+    }else{
+      /*
+
+        else -> defense mode: 
+        look for hp items > 
+        look for speed items
+        
+      */
+
+    }
+  }, 1000);
+
 }
 
 
