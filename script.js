@@ -1,4 +1,16 @@
 /*
+
+	 
+        in this program,
+          - - - - - - - -> j
+        |
+        |
+        |
+        |
+        |
+        v
+        i
+
   - i is y-position, j is x-position
   - available monsters: pikachu, bulbasaur, squirtle, charmander
   - right hand side: player 1; left hand side: player 2
@@ -108,26 +120,54 @@ function buttonClicked(i, j) {
   var imageName = getButtonImage(i, j);
   console.log(i + " " + j + " " + imageName);
 
-  if(imageName != "grid"){//if not grid, then it's a monster
+  if(imageName == currMonster.name){  //display only curr turn's monster's range
     /*  
         in this program,
-        monsterPos[0] == i
-        monsterPos[1] == j
+          - - - - - - - -> j
+        |
+        |
+        |
+        |
+        |
+        v
+        i
     */
 
-    //display only curr turn's monster's range
-    if(imageName == currMonster.name){
-      displayRange(currMonster);
-    }
-    
+    displayRange(currMonster);
     
   }
-  else if(imageName == "grid" && isMonsterClicked){
+  else if(imageName == "grid" || isItem(imageName) && isMonsterClicked){  // a grid or an item is clicked
     //movement
 
     if(inRange(i, j, currMonster)){  //if in valid range
       cleanRangeTag();  //clean all the "range" tags
+      
+
+      if(isItem(imageName)){  // if an item is clicked
+      	setButtonImage(i, j, "grid");   // the item is consumed, make it disappear
+
+      	//effect of items
+      	switch(imageName){
+      		case "attack_grid":
+      			currMonster['atk'] = currMonster.atk + 1;
+      			setATK(currMonster, currMonster.atk);
+      			break;
+      		case "speed_grid":
+      			currMonster['speed'] = currMonster.speed + 1;
+      			setSpeed(currMonster, currMonster.speed);
+      			break;
+      		case "hp_grid":
+      			currMonster['hp'] = currMonster.hp + 1;
+      			setHP(currMonster, currMonster.hp);
+      			break;
+
+      		default:
+      			break;
+      	}
+      }
+
       swapButton(currMonster.i, currMonster.j, i, j); //update image
+
       currMonster['i'] = i;  //update i of currMonster after moving
       currMonster['j'] = j;  //update j
       var placeholder = document.getElementById("button_"+ i +"_"+ j);  //a placeholder element, created just for calling pseudoStyle("") to clean all red layers
@@ -160,8 +200,16 @@ function nextTurn(){
   }
 
   turn++;
+  var messageBar = document.getElementById("message");
+
+  if(turn % 4 == 0){  //spawn new item
+  	spawnItem();
+  }
+
   setStatusText("Turn " + turn);
-}
+  messageBar.innerHTML = "Next item appears in " + (4 - (turn % 4)) + " turn(s).";
+  
+ }
 
 
 //display the movement and attack range of a monster
@@ -459,8 +507,17 @@ HTMLElement.prototype.pseudoStyle = function(content){
 
 //check the (i, j) of a clicked grid is in that monster's movement range. If yes, move to that grid
 function inRange(curr_i, curr_j, monster){
-  //monsterPos[0] == i
-  //monsterPos[1] == j
+   /*  
+        in this program,
+          - - - - - - - -> j
+        |
+        |
+        |
+        |
+        |
+        v
+        i
+   */
   var currButton = document.getElementById("button_"+ curr_i +"_"+ curr_j);
   return currButton.getAttribute("alt") == "range";
 
@@ -901,6 +958,18 @@ function spawnItem(){
 
 	setButtonImage(random_i, random_j, item);
 
+}
+
+function isItem(imageName){
+	switch(imageName){
+		case "attack_grid":
+		case "speed_grid":
+		case "hp_grid":
+			return true;
+
+		default:
+			return false;
+	}
 }
 
 
