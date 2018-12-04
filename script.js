@@ -94,6 +94,7 @@ function setup() { //initialize everything
   setStatusText("Turn " + turn);
   document.getElementById("player1").setAttribute("style","border:3px solid red !important"); //a red frame indicates whose turn
   
+  spawnItem();
 }
 
 function setStatusText(text) {
@@ -881,6 +882,25 @@ function generateRandomCols(numberOfCol){
   }
 
   return list;
+}
+
+
+
+function spawnItem(){
+	var items = ["attack_grid", "speed_grid", "hp_grid"]; //TODO add energy
+	var random_i = Math.floor(Math.random() * 8);  //generate a random number between 0-7
+	var random_j = Math.floor(Math.random() * 16);  //generate a random number between 0-15
+
+	var imageName = getButtonImage(random_i, random_j);
+	while(isPokemon(imageName)){  // until we get an image name that is not a pokemon name
+	  random_i = Math.floor(Math.random() * 8);  
+	  random_j = Math.floor(Math.random() * 16);
+	}
+
+	var item = items[Math.floor(Math.random() * 3)]; //pick a random item
+
+	setButtonImage(random_i, random_j, item);
+
 }
 
 
