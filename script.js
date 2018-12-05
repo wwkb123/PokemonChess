@@ -29,6 +29,8 @@ var currMonster;  //current turn's monster
 
 var turn = 0; //number of turns have been played
 
+var gameover = false; //check the game is over
+
 
 
 
@@ -122,7 +124,7 @@ function setStatusText(text) {
 
 
 function buttonClicked(i, j) {
-
+  if(monster1.hp <= 0 || monster2.hp <= 0) return;  //do nothing when a monster is dead
   var imageName = getButtonImage(i, j);
   console.log(i + " " + j + " " + imageName);
 
@@ -419,8 +421,10 @@ function setHP(monster, newHP){
     player_hpDiv.appendChild(hp);
   }
 
-  if(newHP <= 0){
-    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 500); //delay to wait for the animation pass through
+  if(newHP <= 0 && !gameover){
+    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 900); //delay to wait for the animation pass through
+    setTimeout(function(){ alert("Player " + currMonster.player + " wins!"); }, 1200); 
+    gameover = true;
   }
 }
 
@@ -573,6 +577,8 @@ function isPokemon(name){
 
 //take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
 function skillButtonClicked(player){
+  if(gameover) return;  // do nothing if gamover
+
   if(currMonster.player == player){  //only curr turn monster can use skill
     if(currMonster.energy >= 100){
 
@@ -580,7 +586,7 @@ function skillButtonClicked(player){
         case "pikachu":
         case "pikachu_flipped":
 
-        //select 8 random columns and hit them with thunders
+        //select 8 random columns and hit them with thunders;  animation time: 800 ms
 
         /*
           skill shape:
@@ -596,7 +602,7 @@ function skillButtonClicked(player){
           var randomCols = generateRandomCols(8);
 
 
-          var playAnimation = setInterval(pikachu_animation, 90); 
+          var playAnimation = setInterval(pikachu_animation, 80); 
 
           function pikachu_animation() {
             if(count == 10){ //after displaying 10 consecutive grids (8 grid max height + 2 moving image), finish
@@ -604,6 +610,7 @@ function skillButtonClicked(player){
               var placeholder = document.getElementById("button_"+ 0 +"_"+ 0); //a placeholder element, created just for calling pseudoStyle("") to clean all image layers
               placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
+              nextTurn();  //after the animation is finished, go to next turn
 
             }else{
               
@@ -636,6 +643,7 @@ function skillButtonClicked(player){
         case "squirtle":
         case "squirtle_flipped":
 
+        // animation time: 240 ms
 
         /*
           skill shape:
@@ -662,6 +670,7 @@ function skillButtonClicked(player){
               var placeholder = document.getElementById("button_"+ curr_i +"_"+ curr_j);
               placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
+              nextTurn();   //after the animation is finished, go to next turn
 
             }else{
               
@@ -703,6 +712,8 @@ function skillButtonClicked(player){
         case "bulbasaur":
         case "bulbasaur_flipped":
 
+        // animation time: 360 ms
+
         /*
           skill shape:
 
@@ -729,6 +740,7 @@ function skillButtonClicked(player){
               var placeholder = document.getElementById("button_"+ i +"_"+ j);
               placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
+              nextTurn();   //after the animation is finished, go to next turn
 
             }else{
               
@@ -771,6 +783,9 @@ function skillButtonClicked(player){
 
         case "charmander":
         case "charmander_flipped":
+
+          // animation time: 750 ms
+
           /*
           skill shape:
 
@@ -809,7 +824,7 @@ function skillButtonClicked(player){
             }
           }
 
-          var playAnimation = setInterval(charmander_animation, 60); 
+          var playAnimation = setInterval(charmander_animation, 50); 
 
           function charmander_animation() {
             if(count == Math.max(15 - currMonster.j, currMonster.j - 1) + 5){ //after displaying maximum possible fire images, end the animation
@@ -817,6 +832,7 @@ function skillButtonClicked(player){
               var placeholder = document.getElementById("button_"+ i +"_"+ j);
               placeholder.pseudoStyle("");  //remove the image layers
               clearInterval(playAnimation); //stop the animation
+              nextTurn();   //after the animation is finished, go to next turn
 
             }else{
               
@@ -879,10 +895,7 @@ function skillButtonClicked(player){
 
       }// end of switch
       setEnergy(currMonster, 0); //empty the energy
-      setTimeout(function(){
-        nextTurn(); //wait until the animation thread is read, go to the next turn
-      }, 1200); //delay to wait for the animation pass through
-      
+
     }
   }
 }
@@ -997,7 +1010,7 @@ function getRange(){
   for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 16; j++) {
       var currButton = document.getElementById("button_" + i + "_" + j);
-      if(currButton.getAttribute("alt") == "range"){
+      if(currButton.getAttribute("alt") == "range" && !isPokemon(getButtonImage(i, j))){
         rangeArr.push(i + "_" +j);  // push a i_j pair, to be split("_") later
       }
     }
@@ -1009,6 +1022,11 @@ function getRange(){
 
 //determine whether the victim is in attacker's skill range
 function isInSkillRange(attacker, victim){
+  var attacker_i = parseInt(attacker.i);
+  var attacker_j = parseInt(attacker.j);
+
+  var victim_i = parseInt(victim.i);
+  var victim_j = parseInt(victim.j);
 
   switch(attacker.name){
     case "pikachu_flipped":
@@ -1016,16 +1034,16 @@ function isInSkillRange(attacker, victim){
       break;
 
     case "squirtle_flipped":
-      var upleft_i = (parseInt(attacker.i) - 2);
-      var upleft_j = (parseInt(attacker.j) - 2);
+      var upleft_i = attacker_i - 2;
+      var upleft_j = attacker_j - 2;
 
-      var downright_i = (parseInt(attacker.i) + 2);
-      var downright_j = (parseInt(attacker.j) + 2);
+      var downright_i = attacker_i + 2;
+      var downright_j = attacker_j + 2;
 
 
       for(var i = upleft_i; i <= downright_i; i++){
         for(var j = upleft_j; j <= downright_j; j++){
-          if(i == victim.i && j == victim.j){  //if the victim is in skill range
+          if(i == victim_i && j == victim_j){  //if the victim is in skill range
             return true;
           }
         }
@@ -1038,6 +1056,10 @@ function isInSkillRange(attacker, victim){
       break;
 
     case "charmander_flipped":
+      if(Math.abs(attacker_i - victim_i) <= 1){
+        return true;
+      }
+      return false;
       break;
 
     default:
@@ -1047,79 +1069,155 @@ function isInSkillRange(attacker, victim){
 
 }
 
+//helper function to find the cloest item's position for the AI
+function getClosestItemPos(monster){
+  var itemList = [];
+
+  //find all items
+  for(var i = 0; i < 8; i++){
+    for(var j = 0; j < 16; j++){
+      var currImg = document.getElementById("img_" + i + "_" + j);
+      if(isItem(currImg.getAttribute("alt"))){  //if it is an item
+        itemList.push(i + "_" + j);  // push i_j pair
+      }
+    }
+  }
+
+  if(itemList.length == 0) return null;
+
+  var min_index = 0;
+
+  var curr_i = itemList[0].split("_")[0];  // i_j  ->  i
+  var curr_j = itemList[0].split("_")[1];  // i_j  ->  j
+  var min_distance = Math.abs(curr_i - monster.i) + Math.abs(curr_j - monster.j);  //assume the first distance is the shortest
+
+  for(var index = 0; index < itemList.length; index++){
+    curr_i = itemList[index].split("_")[0];
+    curr_j = itemList[index].split("_")[1];
+    var distance = Math.abs(curr_i - monster.i) + Math.abs(curr_j - monster.j);
+    console.log(distance + " " + itemList[index]);
+    if(min_distance > distance){
+      min_distance = distance;
+      min_index = index;
+    }
+  }
+
+  return itemList[min_index];  //found the i_j pair we want
+
+}
+
+//helper function to help monster make decisions and move
+function monster2Move(rangeArr, command){
+
+
+    var ij_pair = getClosestItemPos(monster2);
+    if(ij_pair != null || command == "attack"){ //if there is an item or command is "attack"
+
+      //destination's i_j
+      var goal_i;
+      var goal_j;
+      if(command == "attack"){  // attack command
+
+        //find the closest position to monster1
+        goal_i = monster1.i;   
+        goal_j = monster1.j;
+        
+      }else if(command == "item"){  // look for item command
+        
+        //find the closest position to an item
+        goal_i = ij_pair.split("_")[0];  // i_j -> i
+        goal_j = ij_pair.split("_")[1];  // i_j -> j
+
+      }
+
+      var min_index = 0;
+      var curr_i = rangeArr[0].split("_")[0];  // i_j  ->  i
+      var curr_j = rangeArr[0].split("_")[1];  // i_j  ->  j
+      var min_distance = Math.abs(curr_i - goal_i) + Math.abs(curr_j - goal_j);  //assume the first distance is the shortest
+      //move to the closest position in available range
+      for(var index = 0; index < rangeArr.length; index++){
+        curr_i = rangeArr[index].split("_")[0];
+        curr_j = rangeArr[index].split("_")[1];
+        var distance = Math.abs(curr_i - goal_i) + Math.abs(curr_j - goal_j);
+        if(min_distance > distance){  //found a better position and doesn't have a pokemon there
+          min_distance = distance;
+          min_index = index;
+        }
+      }// end of for loop
+
+      var move_i = rangeArr[min_index].split("_")[0];
+      var move_j = rangeArr[min_index].split("_")[1];
+      buttonClicked(move_i, move_j);
+
+
+    }else{ // if no item, move randomly
+      var index = Math.floor(Math.random() * rangeArr.length);
+      var curr_i = rangeArr[index].split("_")[0];
+      var curr_j = rangeArr[index].split("_")[1];
+      buttonClicked(curr_i, curr_j);
+      while(isPokemon(getButtonImage(curr_i, curr_j))){  //move only if that grid is not a pokemon
+        index = Math.floor(Math.random() * rangeArr.length);
+        curr_i = rangeArr[index].split("_")[0];
+        curr_j = rangeArr[index].split("_")[1];
+        buttonClicked(curr_i, curr_j);
+      }
+    }
+    //end of "item" command
+
+  
+
+}
+
 
 function AI_move(){
+  if(monster2.hp <= 0) return;  //do nothing if it's dead
+
   var rangeArr;
-  var skillIsCasted = false;
 
   setTimeout(function(){
-    buttonClicked(currMonster.i, currMonster.j); //display the red layers
+    buttonClicked(monster2.i, monster2.j); //display the red layers
     rangeArr = getRange();  //get all elements with "range" tag
-  }, 600);
+  }, 1000);
 
   
   setTimeout(function(){
     //make decisions
-    if(currMonster.hp > 2.5){
-      /*
 
-        if have enough hp -> attack mode: 
-        look for attack chances > 
-        look for attack items > 
-        look for speed items > 
-        move toward enemy 
 
-      */
+    /*
+                                                              if enemy is in attack range -> attack
+                                                             /
+            if have enough energy -> look for attack chances - if not in attack range, but AI have enough hp -> attack mode: move toward enemy
+           /                                                 \
+    -------                                                    else -> defense mode: look for items
+           \
+            else -> defense mode: look for items
 
-      //check whether skill can be casted
-      if(isInSkillRange(currMonster, monster1)){
-        if(currMonster.energy >= 100){  //if have enough energy
+    */
 
-          skillButtonClicked(currMonster.player);
-          skillIsCasted = true;  // the skill is casted
+    //check whether skill can be casted
+    if(monster2.energy >= 100){ //if have enough energy
+      if(isInSkillRange(monster2, monster1)){ //if in skill range
 
-        }else{ //move and look for items/good positions if don't have enough energy
+        skillButtonClicked(monster2.player);
+       
 
-          var index = Math.floor(Math.random() * rangeArr.length);
-          var curr_i = rangeArr[index].split("_")[0];
-          var curr_j = rangeArr[index].split("_")[1];
-          if(!isPokemon(getButtonImage(curr_i, curr_j))){  //move only if that grid is not a pokemon
-            buttonClicked(curr_i, curr_j);
-          }else{
-
-          }
-        }
-
-      } //end of using skill
-
-      if(!skillIsCasted){ // if skill hasn't been casted, move
-        var index = Math.floor(Math.random() * rangeArr.length);
-        var curr_i = rangeArr[index].split("_")[0];
-        var curr_j = rangeArr[index].split("_")[1];
-        if(!isPokemon(getButtonImage(curr_i, curr_j))){  //move only if that grid is not a pokemon
-          buttonClicked(curr_i, curr_j);
+      }else{ // try to move closer to enter skill range
+        if(monster2.hp > 2.5){
+          monster2Move(rangeArr, "attack");
         }else{
-
+          monster2Move(rangeArr, "item");
         }
         
       }
 
-      
-      
-      
-
-
-    }else{
-      /*
-
-        else -> defense mode: 
-        look for hp items > 
-        look for speed items
-        
-      */
-
+    }else{ // if skill hasn't been casted or don't have enough energy, move and look for items/good positions
+      monster2Move(rangeArr, "item");
     }
-  }, 1000);
+
+
+    
+  }, 1900);
 
 }
 
