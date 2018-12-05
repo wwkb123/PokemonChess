@@ -55,6 +55,8 @@ function choose(pokemonName){
   monster2['i'] = 0;
   monster2['j'] = 0;
 
+  monster2['name'] = "bulbasaur_flipped";
+
 
   currMonster = monster1; //player 1's monster move first
   setup();
@@ -198,6 +200,7 @@ function nextTurn(){
     document.getElementById("player2").setAttribute("style","border:3px solid red !important");
           
     currMonster = monster2;
+
     AI_move();  //AI starts making decisions
   
   }else{ //player 2's turn transits to player 1's turn
@@ -423,7 +426,14 @@ function setHP(monster, newHP){
 
   if(newHP <= 0 && !gameover){
     setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 900); //delay to wait for the animation pass through
-    setTimeout(function(){ alert("Player " + currMonster.player + " wins!"); }, 1200); 
+    setTimeout(function(){ 
+      if(monster.player == 2){
+        alert("You win!"); 
+      }else{
+        alert("You lose!"); 
+      }
+      
+    }, 1200); 
     gameover = true;
   }
 }
@@ -724,11 +734,11 @@ function skillButtonClicked(player){
         */
           var count = 0;  
 
-          var i = currMonster.i;
+          var i = parseInt(currMonster.i);
           var up_i = i - 1;
           var down_i = i + 1;
 
-          var j = currMonster.j;
+          var j = parseInt(currMonster.j);
           var left_j = j - 1;
           var right_j = j + 1;
 
@@ -796,10 +806,10 @@ function skillButtonClicked(player){
           */
 
           var count = 0;  
-          var i = currMonster.i;
+          var i = parseInt(currMonster.i);
           var up_i = i - 1;
           var down_i = i + 1;
-          var j = currMonster.j;
+          var j = parseInt(currMonster.j);
           var left_j = j - 1;
           var right_j = j + 1;
 
@@ -904,6 +914,7 @@ function skillButtonClicked(player){
 //a helper function to display the skill animation and calculate the damage taken on monsters
 function displaySkillHelper(btn, skill){ 
   if(btn == null) return;
+
   var className = btn.getAttribute('id');  //in this program, the id and class name of a button are the same
   var btnSplit = className.split("_");  //  -> [button, i, j]
   var btn_i = btnSplit[1];
@@ -913,12 +924,12 @@ function displaySkillHelper(btn, skill){
 
     //check which pokemon get hit, can be mulitple, but not currMonster itself
 
-    if(currMonster.player != monster1.player && monster1.name == btnImgAlt && monster1.i == btn_i && monster1.j == btn_j){  //monster 1 get hit
+    if(currMonster.player != monster1.player && monster1.name == btnImgAlt && parseInt(monster1.i) == parseInt(btn_i) && parseInt(monster1.j) == parseInt(btn_j)){  //monster 1 get hit
       setHP(monster1, monster1.hp - skillDamage(skill));  //deduct hp
       displayRangeHelper(btn,className);  //display a red layer on the enemy image to make the damage taken clearer
     }
 
-    if(currMonster.player != monster2.player && monster2.name == btnImgAlt && monster2.i == btn_i && monster2.j == btn_j){ //monster 2 get hit
+    if(currMonster.player != monster2.player && monster2.name == btnImgAlt && parseInt(monster2.i) == parseInt(btn_i) && parseInt(monster2.j) == parseInt(btn_j)){ //monster 2 get hit
       setHP(monster2, monster2.hp - skillDamage(skill));
       displayRangeHelper(btn,className);
     }
@@ -1053,6 +1064,24 @@ function isInSkillRange(attacker, victim){
       break;
 
     case "bulbasaur_flipped":
+      //check vertical line
+      if(attacker_j == victim_j && Math.abs(attacker_i - victim_i) <= 4){
+        return true;
+      }
+
+      //check horizontal line
+      if(attacker_i == victim_i && Math.abs(attacker_j - victim_j) <= 4){
+        return true;
+      }
+
+      //check diagonals
+
+      if(Math.abs(attacker_i - victim_i) == Math.abs(attacker_j - victim_j) && Math.abs(attacker_i - victim_i) <= 4){
+        return true;
+      }
+
+      //else
+      return false;
       break;
 
     case "charmander_flipped":
@@ -1109,7 +1138,18 @@ function getClosestItemPos(monster){
 //helper function to help monster make decisions and move
 function monster2Move(rangeArr, command){
 
+  console.log(rangeArr);
 
+  if(rangeArr.length == 0){  // sometimes the rangeArr will be null since the skill animation hasn't finished but a monster is moving
+    
+    setTimeout(function(){
+      buttonClicked(monster2.i, monster2.j); //display the red layers
+      rangeArr = getRange();  //get all elements with "range" tag
+      monster2Move(rangeArr, command); //call it again
+    }, 500);
+
+    console.log("rangeArr was null");
+  }else{
     var ij_pair = getClosestItemPos(monster2);
     if(ij_pair != null || command == "attack"){ //if there is an item or command is "attack"
 
@@ -1163,8 +1203,7 @@ function monster2Move(rangeArr, command){
       }
     }
     //end of "item" command
-
-  
+  }
 
 }
 
@@ -1177,7 +1216,7 @@ function AI_move(){
   setTimeout(function(){
     buttonClicked(monster2.i, monster2.j); //display the red layers
     rangeArr = getRange();  //get all elements with "range" tag
-  }, 1000);
+  }, 500);
 
   
   setTimeout(function(){
@@ -1217,7 +1256,7 @@ function AI_move(){
 
 
     
-  }, 1900);
+  }, 1500);
 
 }
 
