@@ -107,6 +107,11 @@ function createPokemon(playerID, pokemonName){
 
 }
 
+//helper function to start a new game
+function restart(){
+	location.reload();
+}
+
 //helper funciton to hide the hint message
 function hideHint(){
 	document.getElementById("hint").innerHTML = "";
@@ -435,13 +440,20 @@ function setHP(monster, newHP){
   }
 
   if(newHP <= 0 && !gameover){
-    setTimeout(function(){ alert("Player " + monster.player +"'s monster fainted! Game Over!"); }, 900); //delay to wait for the animation pass through
+    setTimeout(function(){ 
+    	alert("Player " + monster.player +"'s monster fainted! Game Over!"); 
+    }, 900); //delay to wait for the animation pass through
     setTimeout(function(){ 
       if(monster.player == 2){
         alert("You win!"); 
       }else{
         alert("You lose!"); 
       }
+
+      var messageBar = document.getElementById("message");
+      messageBar.innerHTML = "Gameover. Start a new game?";
+      messageBar.setAttribute("onclick","restart();")
+      messageBar.setAttribute("style","color:blue; cursor:pointer");
       
     }, 1200); 
     gameover = true;
@@ -597,7 +609,7 @@ function isPokemon(name){
 
 //take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
 function skillButtonClicked(player){
-  if(gameover) return;  // do nothing if gamover
+  if(gameover) return;  // do nothing if gameover
 
   if(currMonster.player == player){  //only curr turn monster can use skill
     if(currMonster.energy >= 100){
