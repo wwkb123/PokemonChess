@@ -654,7 +654,7 @@ function skillButtonClicked(player){
 
           
 
-          var playAnimation = setInterval(squirtle_animation, 120);
+          var playAnimation = setInterval(squirtle_animation, 80);
 
           function squirtle_animation() {
             if(count == 3){ //after displaying 2 consecutive grids, finish
@@ -881,7 +881,7 @@ function skillButtonClicked(player){
       setEnergy(currMonster, 0); //empty the energy
       setTimeout(function(){
         nextTurn(); //wait until the animation thread is read, go to the next turn
-      }, 1500); //delay to wait for the animation pass through
+      }, 1200); //delay to wait for the animation pass through
       
     }
   }
