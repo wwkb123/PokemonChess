@@ -155,17 +155,16 @@ function buttonClicked(i, j) {
       	//effect of items
       	switch(imageName){
       		case "attack_grid":
-      			currMonster['atk'] = currMonster.atk + 1;
-      			setATK(currMonster, currMonster.atk);
+      			setATK(currMonster, currMonster.atk + 1);
       			break;
       		case "speed_grid":
-      			currMonster['speed'] = currMonster.speed + 1;
-      			setSpeed(currMonster, currMonster.speed);
+      			setSpeed(currMonster, currMonster.speed + 1);
       			break;
       		case "hp_grid":
-      			currMonster['hp'] = currMonster.hp + 1;
-      			setHP(currMonster, currMonster.hp);
+      			setHP(currMonster, currMonster.hp + 1);
       			break;
+          case "energy_grid":
+            setEnergy(currMonster, currMonster.energy + currMonster.energyCharge);
 
       		default:
       			break;
@@ -454,6 +453,9 @@ function setSpeed(monster, newSpeed){
 }
 
 function setEnergy(monster, newEnergy){
+  if(newEnergy > 100){  // max energy is 100
+    newEnergy = 100;
+  }
   monster['energy'] = newEnergy;
   setProgressBar("bar_" + monster.player, "bg-success", newEnergy);
   if(monster.energy >= 100){ //if full, skill is activable
@@ -572,7 +574,7 @@ function isPokemon(name){
 //take player's id as parameter, e.g. player 1 -> 1, player 2 -> 2
 function skillButtonClicked(player){
   if(currMonster.player == player){  //only curr turn monster can use skill
-    if(currMonster.energy == 100){
+    if(currMonster.energy >= 100){
 
       switch(currMonster.name){
         case "pikachu":
@@ -647,8 +649,8 @@ function skillButtonClicked(player){
         */
           var count = 1; 
 
-          var curr_i = currMonster.i;
-          var curr_j = currMonster.j;
+          var curr_i = parseInt(currMonster.i);
+          var curr_j = parseInt(currMonster.j);
 
           
 
@@ -953,7 +955,14 @@ function generateRandomCols(numberOfCol){
 
 
 function spawnItem(){
-	var items = ["attack_grid", "speed_grid", "hp_grid"]; //TODO add energy
+
+  /* 
+    possible items, put more energy item, to increase the chance of getting it, to prevent player keep getting other same item 
+    that can make the game not balance, e.g. keep getting speed
+  */
+
+	var items = ["energy_grid", "attack_grid", "energy_grid", "speed_grid", "hp_grid", "energy_grid", "energy_grid"]; 
+
 	var random_i = Math.floor(Math.random() * 8);  //generate a random number between 0-7
 	var random_j = Math.floor(Math.random() * 16);  //generate a random number between 0-15
 
@@ -974,6 +983,7 @@ function isItem(imageName){
 		case "attack_grid":
 		case "speed_grid":
 		case "hp_grid":
+    case "energy_grid":
 			return true;
 
 		default:
@@ -1064,9 +1074,12 @@ function AI_move(){
       //check whether skill can be casted
       if(isInSkillRange(currMonster, monster1)){
         if(currMonster.energy >= 100){  //if have enough energy
+
           skillButtonClicked(currMonster.player);
           skillIsCasted = true;  // the skill is casted
-        }else{ //move if don't have enough energy
+
+        }else{ //move and look for items/good positions if don't have enough energy
+
           var index = Math.floor(Math.random() * rangeArr.length);
           var curr_i = rangeArr[index].split("_")[0];
           var curr_j = rangeArr[index].split("_")[1];
@@ -1076,7 +1089,8 @@ function AI_move(){
 
           }
         }
-      }
+
+      } //end of using skill
 
       if(!skillIsCasted){ // if skill hasn't been casted, move
         var index = Math.floor(Math.random() * rangeArr.length);
