@@ -55,8 +55,6 @@ function choose(pokemonName){
   monster2['i'] = 0;
   monster2['j'] = 0;
 
-  monster2['name'] = "bulbasaur_flipped";
-
 
   currMonster = monster1; //player 1's monster move first
   setup();
