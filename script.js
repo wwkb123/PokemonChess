@@ -41,6 +41,8 @@ var currMonster;  //current turn's monster
 
 var turn = 0; //number of turns have been played
 
+var singlePlayer = true;
+
 var gameover = false; //check the game is over
 
 
@@ -216,7 +218,10 @@ function nextTurn(){
           
     currMonster = monster2;
 
-    AI_move();  //AI starts making decisions
+    if(singlePlayer){
+    	AI_move();  //AI starts making decisions
+    }
+    
   
   }else{ //player 2's turn transits to player 1's turn
 
@@ -680,7 +685,7 @@ function skillButtonClicked(player){
         /*
           skill shape:
 
-			    O O O O O
+			O O O O O
 	        O O O O O
 	        O O   O O
 	        O O O O O
@@ -1238,6 +1243,11 @@ function AI_move(){
   setTimeout(function(){
     buttonClicked(monster2.i, monster2.j); //display the red layers
     rangeArr = getRange();  //get all elements with "range" tag
+    while(rangeArr.length == 0){  //sometimes the red layers get cleaned by the animation component, so try again
+    	buttonClicked(monster2.i, monster2.j); 
+    	rangeArr = getRange(); 
+    	console.log("rangeArr was null"); 
+    }
   }, 500);
 
   
@@ -1246,11 +1256,11 @@ function AI_move(){
 
 
     /*
-                                                              if enemy is in attack range -> attack
-                                                             /
-            if have enough energy -> look for attack chances - if not in attack range, but AI have enough hp -> attack mode: move toward enemy
-           /                                                 \
-    -------                                                    else -> defense mode: look for items
+                                      if enemy is in attack range -> attack
+                                     /
+            if have enough energy -> - if not in attack range, but AI have enough hp -> attack mode: move toward enemy
+           /                         \
+    -------                           else -> defense mode: look for items
            \
             else -> defense mode: look for items
 
@@ -1278,16 +1288,16 @@ function AI_move(){
 
 
     
-  }, 1500);
+  }, 1000);
 
 }
 
 
 
 
-
-
 ////////////////========end of methods written/overwritten by me========////////////////
+
+
 
 
 
