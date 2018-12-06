@@ -82,7 +82,7 @@ function player1choose(pokemonName){
 
 function player2choose(pokemonName){
 
-  if(pokemonName == "AI"){
+  if(pokemonName == "AI"){ //let AI choose a pokemon
   	var player2PokemonList = ["pikachu_flipped", "bulbasaur_flipped", "squirtle_flipped", "charmander_flipped"];
   	var player2Pokemon = player2PokemonList[Math.floor(Math.random() * 4)];  // choose an index from 0 to 3
   	monster2 = createPokemon(2, player2Pokemon);
@@ -94,6 +94,7 @@ function player2choose(pokemonName){
   monster2['i'] = 0;
   monster2['j'] = 0;
 
+  //make a pokemon name to be displayed
   switch(monster2.name){
   	case "pikachu_flipped":
   		pokemonName = "Pikachu";
@@ -129,8 +130,6 @@ function singlePlayerMode(){
 	singlePlayer = true;
 	player2choose("AI");
 }
-
-//check whether it is single player mode or 2 players
 
 
 
@@ -179,9 +178,6 @@ function hideHint(){
 
 function setup() { //initialize everything
   fillMatrix();
-  //fillFunctionButtons();
-  //fillStatusText();
-
   setButtonImage(monster1.i, monster1.j, monster1.name);  //bottom right corner
   setButtonImage(monster2.i, monster2.j, monster2.name);  //top left corner
   initMonsterStats(monster1); //player 1
@@ -376,7 +372,7 @@ function getButtonImage(i, j) {
 }
 
 
-//a function to initialize the stats of two monsters at the beginning of the game
+//a function to initialize the stats of two monsters on the scoreboard at the beginning of the game
 function initMonsterStats(monster){
 
   //find the stats div
@@ -487,6 +483,9 @@ function initMonsterStats(monster){
   playerDiv.appendChild(player_energyDiv);
   //end of initilizing stats
 }
+
+
+
 
 function setHP(monster, newHP){
   
@@ -1062,15 +1061,15 @@ function generateRandomCols(numberOfCol){
 }
 
 
-
+//spawn an random item to the battlefield
 function spawnItem(){
 
   /* 
-    possible items, put more energy item, to increase the chance of getting it, to prevent player keep getting other same item 
-    that can make the game not balance, e.g. keep getting speed
+    put more energy item to increase the chance of getting it, to prevent player keep getting other same item 
+    that can make the game not balanced, e.g. keep getting speed/hp
   */
 
-	var items = ["energy_grid", "attack_grid", "energy_grid", "speed_grid", "hp_grid", "energy_grid", "energy_grid"]; 
+	var items = ["energy_grid", "attack_grid", "energy_grid", "speed_grid", "hp_grid", "energy_grid", "energy_grid"];  //possible items
 
 	var random_i = Math.floor(Math.random() * 8);  //generate a random number between 0-7
 	var random_j = Math.floor(Math.random() * 16);  //generate a random number between 0-15
@@ -1087,6 +1086,8 @@ function spawnItem(){
 
 }
 
+
+//helper function to determine an image name is an item
 function isItem(imageName){
 	switch(imageName){
 		case "attack_grid":
@@ -1101,6 +1102,7 @@ function isItem(imageName){
 }
 
 
+//helper function to help the AI determine the range of its monster
 function getRange(){
   var rangeArr = [];
   for (var i = 0; i < 8; i++) {
@@ -1293,6 +1295,7 @@ function monster2Move(rangeArr, command){
 }
 
 
+//AI's main function. Starts making decisions here
 function AI_move(){
   if(monster2.hp <= 0) return;  //do nothing if it's dead
 
