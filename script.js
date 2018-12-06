@@ -41,7 +41,7 @@ var currMonster;  //current turn's monster
 
 var turn = 0; //number of turns have been played
 
-var singlePlayer = true;
+var singlePlayer = false;
 
 var gameover = false; //check the game is over
 
@@ -52,8 +52,8 @@ var gameover = false; //check the game is over
 
 
 
-//determine which pokemon is chosen by Player 1. Pokemon of Player 2 will be selected randomly(Player 2 is AI)
-function choose(pokemonName){
+//determine which pokemon is chosen by Player 1. Pokemon of Player 2 will be selected later, or randomly by AI
+function player1choose(pokemonName){
   alert(pokemonName + ", I choose you!");
 
   monster1 = createPokemon(1, pokemonName.toLowerCase());  //create a pokemon for player 1
@@ -61,20 +61,78 @@ function choose(pokemonName){
   monster1['i'] = 7;
   monster1['j'] = 15;
 
-  var player2PokemonList = ["pikachu_flipped", "bulbasaur_flipped", "squirtle_flipped", "charmander_flipped"];
+  setStatusText("Player 2 choose a Pokemon!");
+  var pikachu_area = document.getElementById("pikachu_area");
+  pikachu_area.setAttribute("onclick","player2choose('Pikachu')");
 
-  var player2Pokemon = player2PokemonList[Math.floor(Math.random() * 4)];  // choose an index from 0 to 3
+  var bulbasaur_area = document.getElementById("bulbasaur_area");
+  bulbasaur_area.setAttribute("onclick","player2choose('Bulbasaur')");
 
-  monster2 = createPokemon(2, player2Pokemon);
+  var charmander_area = document.getElementById("charmander_area");
+  charmander_area.setAttribute("onclick","player2choose('Charmander')");
+
+  var squirtle_area = document.getElementById("squirtle_area");
+  squirtle_area.setAttribute("onclick","player2choose('Squirtle')");
+
+  var singlePlayerButton = document.getElementById("singlePlayer");
+  singlePlayerButton.innerHTML = "Single Player Mode?";
+  singlePlayerButton.setAttribute("style","color:blue");
+
+}
+
+function player2choose(pokemonName){
+
+  if(pokemonName == "AI"){
+  	var player2PokemonList = ["pikachu_flipped", "bulbasaur_flipped", "squirtle_flipped", "charmander_flipped"];
+  	var player2Pokemon = player2PokemonList[Math.floor(Math.random() * 4)];  // choose an index from 0 to 3
+  	monster2 = createPokemon(2, player2Pokemon);
+  }else{
+  	monster2 = createPokemon(2, pokemonName.toLowerCase()+"_flipped");  //create a pokemon for player 2
+  }
+  
+
   monster2['i'] = 0;
   monster2['j'] = 0;
 
+  switch(monster2.name){
+  	case "pikachu_flipped":
+  		pokemonName = "Pikachu";
+    	break;
+
+      case "squirtle_flipped":
+        pokemonName = "Squirtle";
+        break;
+
+      case "bulbasaur_flipped":
+        pokemonName = "Bulbasaur";
+        break;
+
+      case "charmander_flipped":
+      	pokemonName = "Charmander";
+        break;
+
+      default:
+      	break;
+  }
+
+  alert(pokemonName + ", I choose you!");
 
   currMonster = monster1; //player 1's monster move first
   setup();
   document.getElementById("chooseArea").setAttribute("style","display:none");
-
+    var singlePlayerButton = document.getElementById("singlePlayer");
+  	singlePlayerButton.innerHTML = "";  //hide it 
 }
+
+//set the game to single player mode
+function singlePlayerMode(){
+	singlePlayer = true;
+	player2choose("AI");
+}
+
+//check whether it is single player mode or 2 players
+
+
 
 //helper function to return a monster object with proper attributes according to its name
 function createPokemon(playerID, pokemonName){
@@ -450,9 +508,9 @@ function setHP(monster, newHP){
     }, 900); //delay to wait for the animation pass through
     setTimeout(function(){ 
       if(monster.player == 2){
-        alert("You win!"); 
+        alert("Player 1 win!"); 
       }else{
-        alert("You lose!"); 
+        alert("Player 2 win!"); 
       }
 
       var messageBar = document.getElementById("message");
@@ -1296,8 +1354,6 @@ function AI_move(){
 
 
 ////////////////========end of methods written/overwritten by me========////////////////
-
-
 
 
 

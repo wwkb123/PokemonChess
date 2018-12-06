@@ -40,7 +40,8 @@
   <!-- status text bar -->
   <p class="text-center h2" id="status" style="margin: 0px">
       Player 1 choose a Pokemon!
-  </p>
+ </p>
+   <p class="text-center h2"><a href="#" id="singlePlayer"  onclick="singlePlayerMode();"></a></p>  
   <p class="text-center" id="message" style="font-size: 20px; margin: 0px">
       <!-- reserved for game message -->
       Welcome to PokemonChess!
@@ -56,7 +57,7 @@
     <div class="row">
 
 
-      <div class="col-sm-6 border border-secondary" onclick="choose('Pikachu')">
+      <div id="pikachu_area" class="col-sm-6 border border-secondary" onclick="player1choose('Pikachu')">
         <div class="row">
           <div class="col-sm-3">
             <img src="images/pikachu_borderless.jpg">
@@ -73,7 +74,7 @@
       </div> <!-- end of pikachu column-->
 
 
-      <div class="col-sm-6 border border-secondary" onclick="choose('Bulbasaur')">
+      <div id="bulbasaur_area" class="col-sm-6 border border-secondary" onclick="player1choose('Bulbasaur')">
         <div class="row">
           <div class="col-sm-3">
             <img src="images/bulbasaur_borderless.jpg">
@@ -95,7 +96,7 @@
     <div class="row">
 
 
-      <div class="col-sm-6 border border-secondary" onclick="choose('Charmander')">
+      <div id="charmander_area" class="col-sm-6 border border-secondary" onclick="player1choose('Charmander')">
         <div class="row">
           <div class="col-sm-3">
             <img src="images/charmander_borderless.jpg">
@@ -112,7 +113,7 @@
       </div> <!-- end of charmander column-->
 
 
-      <div class="col-sm-6 border border-secondary" onclick="choose('Squirtle')">
+      <div id="squirtle_area" class="col-sm-6 border border-secondary" onclick="player1choose('Squirtle')">
         <div class="row">
           <div class="col-sm-3">
             <img src="images/squirtle_borderless.jpg">
