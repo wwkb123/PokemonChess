@@ -6,6 +6,22 @@ This game is created by a Pokemon enthusiast, and it is for educational purpose 
 Any of the trademarks, service marks, collective marks, design rights, personality rights, or similar rights that are mentioned, used, or cited in this game are the property of their respective owners.
 
 
+
+Extra things I did:
+- Implemented my own code or modified some of mine to change the UI of the game to better suit my need
+- Design and use extra images into the “images” folder, and utilize them properly
+- Using the setTimeout/setInterval method to create an animation effect
+- Originality and idea of the game
+- AI for single player
+- add a custom css file
+
+
+Things I didn't do:
+- Keyboard controls
+- Multiple levels
+- Anti-cheating
+
+
 ***Recommended Specifications***
 - Highly recommend to download this repl and play it locally (repl.it makes the animations terribly displayed)
 - Any OS with at least 1366x768 screen resolution
@@ -13,12 +29,14 @@ Any of the trademarks, service marks, collective marks, design rights, personali
 - Is a Pokemon fan
 
 
-**Note: 
+**Note:
 - I put the codes written by me and Professor Liu into a same file, but separated by a huge space and "////////////////////////" lines. My codes are from line 1 to about 1300, and the rest are Professor Liu's.
 
 - Check the "screenshots" folder before/during reading this documentation
 
-- I faced a weird bug in this game and I tried my best to give a solution. Sometimes, the list "rangeArr", which tells the AI which grids it can move to, will become null, due to an unknown reason (probably because of the AI moves while a skill animation's interval hasn't finished). I handled this case by filling the list again, but the red layers of AI's monster, which indicates its movement range, may not be shown at that turn. If this happens, a message will appear in the console. Besides, the game works fine.
+- I faced a weird bug in this game and I tried my best to give a solution. Sometimes, the list "rangeArr", which tells the AI which grids it can move to, will become null, due to an unknown reason (probably because of the AI moves while a skill animation's interval hasn't finished). I handled this case by filling the list again, but the red layers of AI's monster, which indicates its movement range, may not be shown at that turn. If this happens, a message will appear in the console. 
+
+- So when it's your turn, don't click the button too fast. Probably wait for 1-2 seconds to let the interval finish. Besides, the game works fine.
 
 
 
@@ -30,7 +48,9 @@ There are 4 available characters: Pikachu, Bulbasaur, Squirtle, and Charmander. 
 
 
 Gameplay:
-Player 1 (you) pick a character (a Pokemon) first, then Player 2 (or the AI will pick a character randomly).
+Support single player/2 players mode.
+
+Player 1 (you) pick a character (a Pokemon) first, then Player 2 (or click single player mode, then the AI will pick a character randomly).
 After entered the battlefield, there will be a scoreboard for each player, displaying the stats (hp, attack, speed, energy) of their characters.
 
 Move: Players take turns to move. In each turn, a character can only either move or cast a skill. Whenever a character casts a spell or move, its turn ends. The game continues until one of the characters' hp is <= 0.
