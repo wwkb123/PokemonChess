@@ -42,11 +42,16 @@ Characters can attack only by using skills. Skills can only be casted when the e
 The damage of the skill depends on the character's attack (can be cumulated with attack+ item).
 
 ***Skills:***
-
-Check "screenshots" folder for the skill images demo
+<img src="pikachu_skill_range.png">
 Pikachu: selects 8 random columns and hits them with thunders;
+
+<img src="bulbasaur_skill_range.png">
 Bulbasaur: hits horizontal, vertical, diagonal lines within 4 grids with leaves
+
+<img src="charmander_skill_range.png">
 Charmander: burns 3 horizontal lines (i-1, i, i+1)
+
+<img src="squirtle_skill_range.png">
 Squirtle: takes self as the center, hits a 5x5 square with bubbles
 
 ***Speed:***
