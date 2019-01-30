@@ -1,5 +1,5 @@
 # PokemonChess
-
+<img src="screenshots/battlefield.png">
 
 Disclaimer:
 This game is created by a Pokemon enthusiast, and it is for educational purpose only.
