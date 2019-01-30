@@ -17,47 +17,57 @@ Any of the trademarks, service marks, collective marks, design rights, personali
 
 
 
-# Introduction:
+***Introduction:***
+
 This game is similar to a chess game but with Pokemon characters and items. I also take games "Super Robot War" and "Summon Board" as gameplay references. 
 
 There are 4 available characters: Pikachu, Bulbasaur, Squirtle, and Charmander. Different characters have different skill moves. The player have to pick a character and defeat another player (or the AI) on a 8*16 battlefield.
 
 
 
-# Gameplay:
+***Gameplay:***
+
 Support single player/2 players mode.
 
 Player 1 (you) pick a character (a Pokemon) first, then Player 2 (or click single player mode, then the AI will pick a character randomly).
 After entered the battlefield, there will be a scoreboard for each player, displaying the stats (hp, attack, speed, energy) of their characters.
 
-# Move: 
+***Move: ***
+
 Players take turns to move. In each turn, a character can only either move or cast a skill. Whenever a character casts a spell or move, its turn ends. The game continues until one of the characters' hp is <= 0.
 
-# Attack:
+***Attack:***
+
 Characters can attack only by using skills. Skills can only be casted when the energy is full (100%). The range of different skills are demonstrated under the "screenshots" folder (the skill range can't be seen in the game until it is casted).
 The damage of the skill depends on the character's attack (can be cumulated with attack+ item).
 
-# Skills:
+***Skills:***
+
 Check "screenshots" folder for the skill images demo
 Pikachu: selects 8 random columns and hits them with thunders;
 Bulbasaur: hits horizontal, vertical, diagonal lines within 4 grids with leaves
 Charmander: burns 3 horizontal lines (i-1, i, i+1)
 Squirtle: takes self as the center, hits a 5x5 square with bubbles
 
-# Speed:
+***Speed:***
+
 Speed indicates at most how many grids you can move from your current location.
 
-# Energy:
+***Energy:***
+
 Energy will be charged every time when a character moves, or consume an energy+ item. The charging speed depends on the character (Pikachu: 50%/turn, Bulbasaur: 25%/turn, Squirtle: 25%/turn, and Charmander: 20%/turn). Energy will be fully consumed (0%) after a skill is casted.
 
-# Movement:
+***Movement:***
+
 When it is a player's turn, click your character, then several red layers will be displayed, indicating your movement range (check the "screenshots" folder to explore range of different pokemon). Click on any red layer to move to that location. Can't move to a grid that already has a character there.
 
-# Item:
+***Item:***
+
 A random item will be spawned on the battlefield every 5 turns. Move to that grid will consume the item and apply the effect immediately. Heart: +1 HP, sword: +1 attack, boots: +1 speed, battery: +{character's energyCharge}% energy.
 
 
-# AI:
+***AI:***
+
 If player 1 chooses single player mode, then player 2 will be controlled by an "AI" (not that intelligent though).
 
 The AI follows the flow below:
@@ -76,7 +86,8 @@ Stops when the game is over.
 
 
 
-# Game key logics/flow explain (brief):
+***Game key logics/flow explain (brief):***
+
 
 key variables: 
 monster1: an object, stores information of player 1's Pokemon, e.g. name, atk, hp, i, j etc.
@@ -98,7 +109,8 @@ When a skillButton (on the scoreboard) is clicked, skillButtonClicked() will be 
 More helper functions are explained in the code file
 
 
-Future Plan:
+***Future Plan:***
+
 -Multiplayer mode
 -Story mode (challenge different Pokemons and bosses)
 -Cleverer AI
