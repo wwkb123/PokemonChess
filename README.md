@@ -32,7 +32,7 @@ Support single player/2 players mode.
 Player 1 (you) pick a character (a Pokemon) first, then Player 2 (or click single player mode, then the AI will pick a character randomly).
 After entered the battlefield, there will be a scoreboard for each player, displaying the stats (hp, attack, speed, energy) of their characters.
 
-***Move: ***
+***Move:***
 
 Players take turns to move. In each turn, a character can only either move or cast a skill. Whenever a character casts a spell or move, its turn ends. The game continues until one of the characters' hp is <= 0.
 
@@ -112,7 +112,11 @@ More helper functions are explained in the code file
 ***Future Plan:***
 
 -Multiplayer mode
+
 -Story mode (challenge different Pokemons and bosses)
+
 -Cleverer AI
+
 -Make the characters more balance
+
 -BGM/sound effects
