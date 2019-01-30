@@ -43,16 +43,24 @@ The damage of the skill depends on the character's attack (can be cumulated with
 
 ***Skills:***
 <img src="screenshots/pikachu_skill_range.png">
-Pikachu: selects 8 random columns and hits them with thunders;
+### Pikachu: selects 8 random columns and hits them with thunders;
+
+
 
 <img src="screenshots/bulbasaur_skill_range.png">
-Bulbasaur: hits horizontal, vertical, diagonal lines within 4 grids with leaves
+### Bulbasaur: hits horizontal, vertical, diagonal lines within 4 grids with leaves
+
+
 
 <img src="screenshots/charmander_skill_range.png">
-Charmander: burns 3 horizontal lines (i-1, i, i+1)
+### Charmander: burns 3 horizontal lines (i-1, i, i+1)
+
+
 
 <img src="screenshots/squirtle_skill_range.png">
-Squirtle: takes self as the center, hits a 5x5 square with bubbles
+### Squirtle: takes self as the center, hits a 5x5 square with bubbles
+
+
 
 ***Speed:***
 
